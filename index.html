@@ -287,6 +287,17 @@ p,span,div,input,textarea,select,button,label{
 .h1-name{font-weight:900;letter-spacing:1px;}
 .sec-title,.h1-name,.panel-title,.pillar-title{font-weight:800;}
 
+
+/* DELEGAR - agregar empresas y personas */
+.btn-add-empresa{background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.3);border-radius:8px;color:var(--gold);font-size:11px;padding:5px 12px;cursor:pointer;font-weight:600;transition:all .15s;}
+.btn-add-empresa:hover{background:rgba(212,168,67,0.2);}
+.btn-add-persona{background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);border-radius:6px;color:var(--indigo);font-size:10px;padding:3px 9px;cursor:pointer;font-weight:600;}
+.btn-add-persona:hover{background:rgba(129,140,248,0.2);}
+.btn-del-empresa{background:none;border:none;color:var(--dim);font-size:12px;cursor:pointer;padding:2px 5px;}
+.btn-del-empresa:hover{color:var(--red);}
+.btn-del-persona{background:none;border:none;color:var(--dim);font-size:11px;cursor:pointer;padding:1px 4px;}
+.btn-del-persona:hover{color:var(--red);}
+
 </style>
 </head>
 <body>
@@ -395,6 +406,7 @@ try{
     <span class="date-label" id="h3-label" onclick="h3Nav(0)">Hoy</span>
     <button class="date-nav-btn" onclick="h3Nav(1)" id="h3-next">›</button>
     <button class="btn b-ghost" style="margin-left:auto" onclick="h3Nav(1)">Planificar mañana →</button>
+    <button class="btn-add-empresa" onclick="h3AddEmpresa()">+ Empresa</button>
   </div>
   <div id="h3-board"></div>
 </div>
@@ -843,6 +855,74 @@ function h3Nav(dir){
   else{const d=new Date(h3Date+'T12:00:00');d.setDate(d.getDate()+dir);h3Date=d.toISOString().slice(0,10);}
   renderH3();
 }
+
+// ═══ DELEGAR DINÁMICO ═══
+var H3_EMPRESAS_DEFAULT=[
+  {id:'hm',label:'HM Arquitectura',color:'#818cf8',people:['Linoska','Bárbara']},
+  {id:'nano',label:'Nanohome Constructora',color:'#f87171',people:['Daniel','Alex','Juan','Andrés','Iván']},
+  {id:'lola',label:'Lola FM',color:'#fbbf24',people:['Kathy','Rodri']},
+  {id:'rock',label:'Rockstar Academia',color:'#d4a843',people:['Saire','Caro']},
+  {id:'wifis',label:'Wifis',color:'#34d399',people:['Pato']},
+  {id:'inmo',label:'Inmobiliaria',color:'#4ade80',people:['Carlos González']},
+];
+
+function h3LoadEmpresas(){
+  try{
+    var saved=ls('h3_empresas');
+    return saved&&saved.length?saved:JSON.parse(JSON.stringify(H3_EMPRESAS_DEFAULT));
+  }catch(e){return JSON.parse(JSON.stringify(H3_EMPRESAS_DEFAULT));}
+}
+function h3SaveEmpresas(arr){ls('h3_empresas',arr);}
+
+function h3AddEmpresa(){
+  document.getElementById('modal-title').textContent='Agregar empresa';
+  document.getElementById('modal-body').innerHTML='<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Nombre de la empresa</label><input type="text" id="new-emp-name" style="width:100%;margin-bottom:10px" placeholder="Ej: Nueva Empresa"/><label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Color</label><input type="color" id="new-emp-color" value="#818cf8" style="width:60px;height:30px;border:none;background:none;cursor:pointer"/>';
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-gold" onclick="h3SaveNewEmpresa()">Agregar</button>';
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function h3SaveNewEmpresa(){
+  var name=(document.getElementById('new-emp-name')||{}).value||'';
+  name=name.trim();if(!name)return;
+  var color=(document.getElementById('new-emp-color')||{}).value||'#818cf8';
+  var arr=h3LoadEmpresas();
+  var id='emp_'+Date.now();
+  arr.push({id:id,label:name,color:color,people:[]});
+  h3SaveEmpresas(arr);closeModal();renderH3();toast('Empresa agregada');
+}
+
+function h3DelEmpresa(empId){
+  if(!confirm('Eliminar esta empresa?'))return;
+  var arr=h3LoadEmpresas().filter(function(e){return e.id!==empId;});
+  h3SaveEmpresas(arr);renderH3();toast('Empresa eliminada');
+}
+
+function h3AddPersona(empId){
+  document.getElementById('modal-title').textContent='Agregar persona';
+  document.getElementById('modal-body').innerHTML='<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Nombre</label><input type="text" id="new-persona-name" style="width:100%" placeholder="Ej: Diego"/><input type="hidden" id="new-persona-empid" value="'+empId+'"/>';
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-indigo" onclick="h3SaveNewPersona()">Agregar</button>';
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function h3SaveNewPersona(){
+  var name=(document.getElementById('new-persona-name')||{}).value||'';
+  var empId=(document.getElementById('new-persona-empid')||{}).value||'';
+  name=name.trim();if(!name||!empId)return;
+  var arr=h3LoadEmpresas();
+  var emp=arr.find(function(e){return e.id===empId;});
+  if(!emp)return;
+  emp.people.push(name);
+  h3SaveEmpresas(arr);closeModal();renderH3();toast(name+' agregado a '+emp.label);
+}
+
+function h3DelPersona(empId,personName){
+  var arr=h3LoadEmpresas();
+  var emp=arr.find(function(e){return e.id===empId;});
+  if(!emp)return;
+  emp.people=emp.people.filter(function(p){return p!==personName;});
+  h3SaveEmpresas(arr);renderH3();toast(personName+' eliminado');
+}
+
 function renderH3(){
   const isT=h3Date===todayKey();const isF=h3Date>todayKey();
   document.getElementById('h3-label').textContent=isT?'Hoy':isF?'Mañana':new Date(h3Date+'T12:00:00').toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'});
@@ -867,8 +947,9 @@ function renderH3(){
             <div class="per-body">
               ${pdata.done?'<div class="done-badge">✅ Realizado</div>':''}
               <textarea class="per-task" id="h3-${pid}" placeholder="Tarea para ${p.split(' ')[0]}..." oninput="h3Save('${emp.id}','${p}','${h3Date}')">${esc(pdata.task||'')}</textarea>
-              <div style="display:flex;gap:6px;margin-top:6px;">
+              <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
                 <button class="copy-task-btn" onclick="h3CopyTask('${pid}')">📋 Copiar para WhatsApp</button>
+                <button class="btn-del-persona" onclick="h3DelPersona('${emp.id}','${p}')" title="Eliminar persona">✕ Quitar</button>
               </div>
             </div>
           </div>`;
