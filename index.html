@@ -634,29 +634,23 @@ function importLocal(){
 
 // SETTINGS MODAL
 function openSettings(){
-  const cfg=getSyncCfg();
-  showModal('⚙️ Configuración de sync',`
-    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px">
-      Para sync automático entre dispositivos usamos <strong style="color:var(--text)">JSONBin.io</strong> (gratis).<br>
-      Pasos: 1) Crear cuenta en <a href="https://jsonbin.io" target="_blank" style="color:var(--indigo)">jsonbin.io</a> → 
-      2) API Keys → crear Master Key → 
-      3) New Bin → crear bin vacío → copiar el ID (después del /b/).
-    </p>
-    <label>API Key (Master Key)</label>
-    <input type="password" id="cfg-key" value="${esc(cfg.apiKey)}" placeholder="$2a$10$..."/>
-    <label>Bin ID</label>
-    <input type="text" id="cfg-bin" value="${esc(cfg.binId)}" placeholder="6487abc123..."/>
-    <hr style="border-color:var(--border);margin:16px 0">
-    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">O usa JSON manual (sin cuenta):</p>
-    <div style="display:flex;gap:7px">
-      <button class="btn b-ghost" onclick="exportLocal()">📥 Exportar JSON</button>
-      <button class="btn b-ghost" onclick="importLocal()">📤 Importar JSON</button>
-    </div>
-  `,[
-    {txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},
-    {txt:'Guardar configuración',cls:'b-gold',fn:'saveSyncCfg()'},
-  ]);
+  var cfg=getSyncCfg();
+  var body=document.createElement('div');
+  body.innerHTML='<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#fbbf24;line-height:1.6"><strong>Para usar desde iPhone:</strong><br>Abre en Safari - Compartir - Anadir a pantalla de inicio.</div>'
+    +'<p style="font-size:12px;color:var(--muted);margin-bottom:14px">Para sync automatico usa JSONBin.io (gratis). 1) Crear cuenta en jsonbin.io 2) API Keys - Master Key 3) New Bin - copiar el ID.</p>'
+    +'<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;margin-top:12px">API Key</label>'
+    +'<input type="password" id="cfg-key" style="width:100%;margin-bottom:10px" value="'+((cfg&&cfg.apiKey)||'')+'" placeholder="Master Key..."/>'
+    +'<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Bin ID</label>'
+    +'<input type="text" id="cfg-bin" style="width:100%;margin-bottom:14px" value="'+((cfg&&cfg.binId)||'')+'" placeholder="ID del bin..."/>'
+    +'<hr style="border-color:var(--border);margin-bottom:14px">'
+    +'<div style="display:flex;gap:7px"><button class="btn b-ghost" onclick="exportLocal()">Exportar JSON</button><button class="btn b-ghost" onclick="importLocal()">Importar JSON</button></div>';
+  document.getElementById('modal-title').textContent = 'Configuracion de sync';
+  document.getElementById('modal-body').innerHTML='';
+  document.getElementById('modal-body').appendChild(body);
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-gold" onclick="saveSyncCfg()">Guardar configuracion</button>';
+  document.getElementById('modal-bg').classList.add('open');
 }
+
 function saveSyncCfg(){
   ls('sync_cfg',{apiKey:document.getElementById('cfg-key').value.trim(),binId:document.getElementById('cfg-bin').value.trim()});
   closeModal();setSyncStatus('Configurado');toast('✅ Configuración guardada');
@@ -664,16 +658,19 @@ function saveSyncCfg(){
 
 // PILLAR EDIT MODAL
 function editPillar(key){
-  const info=ls('h1_info')||h1DefaultInfo();
-  showModal('✏️ Editar — '+key,`
-    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Este texto lo uso para generar tu reflexión diaria de forma personalizada.</p>
-    <label>Descripción</label>
-    <textarea id="pillar-edit-txt" style="width:100%;height:100px;padding:8px 10px;resize:vertical">${esc(info[key]||'')}</textarea>
-  `,[
-    {txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},
-    {txt:'Guardar',cls:'b-gold',fn:`savePillar('${key}')`},
-  ]);
+  var info=ls('h1_info')||h1DefaultInfo();
+  var labels={'familia':'Tu familia','identidad':'Quien te convertiste','tiempo':'Tu tiempo'};
+  var body=document.createElement('div');
+  body.innerHTML='<p style="font-size:11px;color:var(--muted);margin-bottom:10px">Edita este texto para que yo genere mejor tu reflexion diaria.</p>'
+    +'<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Descripcion</label>'
+    +'<textarea id="pillar-edit-txt" style="width:100%;height:100px;padding:8px 10px;resize:vertical">'+((info&&info[key])||'')+'</textarea>';
+  document.getElementById('modal-title').textContent='Editar - '+(labels[key]||key);
+  document.getElementById('modal-body').innerHTML='';
+  document.getElementById('modal-body').appendChild(body);
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-gold" onclick="savePillar(''+key+'')">Guardar</button>';
+  document.getElementById('modal-bg').classList.add('open');
 }
+
 function savePillar(key){
   const info=ls('h1_info')||h1DefaultInfo();
   info[key]=document.getElementById('pillar-edit-txt').value.trim();
@@ -937,7 +934,7 @@ function h4SaveDone(k,arr){ls('h4_done_'+k,arr.slice(0,100));}
 
 
 
-
+function h4Del(k,id){id=parseInt(id);h4SaveList(k,h4LoadList(k).filter(t=>t.id!==id));h4RenderList(k,h4Cls(k));}
 
 function h4Cls(k){return{high:'bl-high',mid:'bl-mid',low:'bl-low',shop:'bl-shop',pay:'bl-pay'}[k]||'bl-day';}
 function h4RenderAll(){h4InjectFixed();h4RenderDay();['high','mid','low','shop','pay'].forEach(k=>h4RenderList(k,h4Cls(k)));try{renderFixedTasks();}catch(e){}}
@@ -1278,67 +1275,29 @@ function h4RenderList(k,cls){
   if(cntEl)cntEl.textContent=arr.length;
   var el=document.getElementById('h4-list-'+k);
   if(!el)return;
-  var html='';
-  for(var i=0;i<arr.length;i++){
-    var t=arr[i];
-    var tag=t.emp?empTag(t.emp):'';
-    var txt=(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    html+='<div class="h4-item '+cls+'" data-k="'+k+'" data-id="'+t.id+'">';
-    html+=tag;
-    html+='<div class="h4-chk" onclick="h4Tog(this)"></div>';
-    html+='<span class="h4-txt">'+txt+'</span>';
-    html+='<button class="h4-rm" onclick="h4DelBtn(this)">✕</button>';
-    html+='</div>';
-  }
-  el.innerHTML=html||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">—</div>';
+  el.innerHTML=arr.map(function(t){
+    return '<div class="h4-item '+cls+'">'
+      +(t.emp?empTag(t.emp):'')
+      +'<div class="h4-chk" onclick="h4Tog(''+k+'','+t.id+')"></div>'
+      +'<span class="h4-txt">'+(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
+      +'<button class="h4-rm" onclick="h4Del(''+k+'','+t.id+')">✕</button>'
+      +'</div>';
+  }).join('')||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">—</div>';
   var dEl=document.getElementById('h4-done-'+k);
   if(dEl){
-    if(done.length){
-      var dhtml='';
-      for(var j=0;j<Math.min(done.length,20);j++){
-        var e=done[j];
-        var ec=EMP_COLORS[e.emp||']'||''];
-        var en=EMP_NAMES[e.emp||''];
-        dhtml+='<div class="hist-item">';
-        dhtml+='<span class="hist-date">'+e.date+'</span>';
-        if(e.emp){dhtml+='<span class="emp-tag" style="background:'+EMP_COLORS[e.emp]+'20;color:'+EMP_COLORS[e.emp]+'">'+EMP_NAMES[e.emp]+'</span> ';}
-        dhtml+='<span class="hist-txt" style="text-decoration:line-through;color:var(--dim)">'+esc(e.text)+'</span>';
-        dhtml+='</div>';
-      }
-      dEl.innerHTML=dhtml;
-    } else {
-      dEl.innerHTML='<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
-    }
+    dEl.innerHTML=done.length?done.slice(0,20).map(function(e){
+      return '<div class="hist-item"><span class="hist-date">'+e.date+'</span>'
+        +(e.emp?'<span class="emp-tag" style="background:'+EMP_COLORS[e.emp||'']+'20;color:'+EMP_COLORS[e.emp||'']+'">'+EMP_NAMES[e.emp||'']+'</span> ':'')
+        +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim)">'+esc(e.text)+'</span></div>';
+    }).join(''):'<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
   }
 }
 
-function h4Tog(el){
-  var item=el.closest('[data-k]');
-  if(!item)return;
-  var k=item.getAttribute('data-k');
-  var id=parseInt(item.getAttribute('data-id'));
+// Override h4Tog to preserve emp field
+function h4Tog(k,id){
+  id=parseInt(id);
   var arr=h4LoadList(k);
   var x=arr.find(function(t){return t.id===id;});
-  if(!x)return;
-  var done=h4LoadDone(k);
-  done.unshift({date:todayKey(),text:x.text,emp:x.emp||''});
-  h4SaveDone(k,done);
-  h4SaveList(k,arr.filter(function(t){return t.id!==id;}));
-  h4RenderList(k,h4Cls(k));
-  toast('✅ Realizada');
-}
-
-function h4DelBtn(el){
-  var item=el.closest('[data-k]');
-  if(!item)return;
-  var k=item.getAttribute('data-k');
-  var id=parseInt(item.getAttribute('data-id'));
-  h4SaveList(k,h4LoadList(k).filter(function(t){return t.id!==id;}));
-  h4RenderList(k,h4Cls(k));
-}
-
-
-);
   if(!x)return;
   var done=h4LoadDone(k);
   done.unshift({date:todayKey(),text:x.text,emp:x.emp||''});
@@ -1376,14 +1335,20 @@ function h4DelFixed(idx){
 }
 
 function openAddFixed(){
-  showModal('📌 Agregar tarea fija recurrente',
-    '<label>Tarea</label><input type="text" id="fix-txt" style="width:100%" placeholder="Ej: Tocar batería"/>'
-    +'<label>Día de la semana</label>'
-    +'<select id="fix-day" style="width:100%"><option value="1">Lunes</option><option value="2">Martes</option><option value="3" selected>Miércoles</option><option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option></select>'
-    +'<label>Hora (opcional)</label><input type="text" id="fix-time" style="width:100%" placeholder="Ej: 11:00"/>'
-    +'<label>Empresa (opcional)</label><select id="fix-emp" style="width:100%"><option value="">Sin empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmobiliaria</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select>',
-    [{txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},{txt:'Guardar tarea fija',cls:'b-gold',fn:'saveFixed()'}]
-  );
+  var modalBody = document.createElement('div');
+  modalBody.innerHTML = '<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Tarea</label>'
+    + '<input type="text" id="fix-txt" style="width:100%;margin-bottom:10px" placeholder="Ej: Tocar bateria"/>'
+    + '<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Dia de la semana</label>'
+    + '<select id="fix-day" style="width:100%;margin-bottom:10px"><option value="1">Lunes</option><option value="2">Martes</option><option value="3" selected>Miercoles</option><option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sabado</option><option value="0">Domingo</option></select>'
+    + '<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Hora (opcional)</label>'
+    + '<input type="text" id="fix-time" style="width:100%;margin-bottom:10px" placeholder="Ej: 11:00"/>'
+    + '<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Empresa (opcional)</label>'
+    + '<select id="fix-emp" style="width:100%"><option value="">Sin empresa</option><option value="moragas">Moragas</option><option value="hm">HM Arq</option><option value="nano">Nanohome</option><option value="inmo">Inmobiliaria</option><option value="lola">Lola</option><option value="rock">Rockstar</option><option value="wifis">Wifis</option><option value="personal">Personal</option></select>';
+  document.getElementById('modal-title').textContent = 'Agregar tarea fija recurrente';
+  document.getElementById('modal-body').innerHTML = '';
+  document.getElementById('modal-body').appendChild(modalBody);
+  document.getElementById('modal-footer').innerHTML = '<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-gold" onclick="saveFixed()">Guardar tarea fija</button>';
+  document.getElementById('modal-bg').classList.add('open');
 }
 
 function saveFixed(){
