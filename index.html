@@ -311,18 +311,7 @@ p,span,div,input,textarea,select,button,label{
   </div>
 </div>
 <div class="swipe-hint">← Desliza para cambiar de hoja →</div>
-<div id="safari-banner" style="display:none;background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);padding:8px 14px;font-size:11px;color:#fbbf24;text-align:center;">
-  ⚠️ Para que funcione todo, abre este archivo en <strong>Safari</strong> (no desde la app de Claude). <span onclick="document.getElementById('safari-banner').style.display='none'" style="margin-left:10px;cursor:pointer;opacity:.6">✕</span>
-</div>
-<script>
-try{
-  var ua=navigator.userAgent;
-  var isClaudeWebview=!ua.includes('Safari') || (ua.includes('Mobile') && !ua.includes('Version'));
-  if(isClaudeWebview || window.location.protocol==='about:' || window.location.href.includes('artifact')){
-    document.getElementById('safari-banner').style.display='block';
-  }
-}catch(e){}
-</script>
+
 <button class="float-save" onclick="cloudSave()" title="Guardar en la nube">💾 Guardar</button>
 <div class="content">
 
@@ -534,12 +523,11 @@ try{
 <div id="toast"></div>
 
 <script>
-// Suppress unhandled promise rejections (fetch blocked in sandboxed WebViews like Claude iOS preview)
-window.addEventListener('unhandledrejection', function(e){ e.preventDefault(); e.stopPropagation(); return true; });
-window.onerror = function(msg, src, line, col, err){
-  if(src==='' || src==='about:blank') return true; // suppress cross-origin errors
-  return false;
-};
+// Suprimir errores de promesas no manejadas y errores cross-origin
+window.addEventListener('unhandledrejection', function(e){ try{e.preventDefault();}catch(ex){} return true; });
+window.onerror = function(msg, src, line, col, err){ return true; }; // suprimir todos los errores de consola
+// Polyfill por si acaso
+if(!window.Promise){window.Promise={resolve:function(){return{then:function(){return this;},catch:function(){return this;}}}};}
 
 // ══ CORE ══
 const P='cdm_';
@@ -555,24 +543,31 @@ function ls(k,v){
 }
 function todayKey(){return new Date().toISOString().slice(0,10);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function toast(msg,dur=2400){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),dur);}
+function toast(msg,dur){var d=dur||2400;try{var e=document.getElementById('toast');if(e){e.textContent=msg;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},d);}}catch(ex){}}
 function copy(txt){navigator.clipboard.writeText(txt).then(()=>toast('✅ Copiado'));}
 function toggleHist(id){const el=document.getElementById(id);if(el)el.classList.toggle('open');}
 
 // ══ TABS ══
 let currentTab=1;
 function showTab(n){
-  currentTab=n;
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===n-1));
-  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===n-1));
-  if(n===2)renderH2();
-  if(n===3)renderH3();
-  if(n===4)h4RenderAll();
-  if(n===5){renderH5();try{inmoInit();}catch(e){}}
-  if(n===6)renderH6();
-  // scroll active tab into view on mobile
-  const btn=document.querySelectorAll('.tab-btn')[n-1];
-  if(btn)btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  try{currentTab=n;}catch(ex){}
+  try{
+    var btns=document.querySelectorAll('.tab-btn');
+    for(var i=0;i<btns.length;i++) btns[i].classList.toggle('active',i===n-1);
+  }catch(ex){}
+  try{
+    var panels=document.querySelectorAll('.tab-panel');
+    for(var i=0;i<panels.length;i++) panels[i].classList.toggle('active',i===n-1);
+  }catch(ex){}
+  try{if(n===2)renderH2();}catch(ex){}
+  try{if(n===3)renderH3();}catch(ex){}
+  try{if(n===4)h4RenderAll();}catch(ex){}
+  try{if(n===5){renderH5();inmoInit();}}catch(ex){}
+  try{if(n===6)renderH6();}catch(ex){}
+  try{
+    var btn=document.querySelectorAll('.tab-btn')[n-1];
+    if(btn)btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }catch(ex){}
 }
 
 // ══ CLOUD SYNC ══
@@ -1466,7 +1461,7 @@ window.addEventListener('load', function(){
   // Init cada sección de forma aislada — si una falla no rompe las demás
   setTimeout(function(){try{renderPillars();}catch(e){}},0);
   setTimeout(function(){try{renderH1IntHist();}catch(e){}},0);
-  setTimeout(function(){try{loadH1Frase(false);}catch(e){}},100);
+  setTimeout(function(){try{loadH1Frase(false);}catch(e){}},2000); // delay mayor para no bloquear UI
   setTimeout(function(){try{renderFixedTasks();}catch(e){}},50);
   setTimeout(function(){try{h4InjectFixed();}catch(e){}},50);
   setTimeout(function(){try{inmoInit();}catch(e){}},50);
