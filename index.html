@@ -311,7 +311,18 @@ p,span,div,input,textarea,select,button,label{
   </div>
 </div>
 <div class="swipe-hint">← Desliza para cambiar de hoja →</div>
-
+<div id="safari-banner" style="display:none;background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);padding:8px 14px;font-size:11px;color:#fbbf24;text-align:center;">
+  ⚠️ Para que funcione todo, abre este archivo en <strong>Safari</strong> (no desde la app de Claude). <span onclick="document.getElementById('safari-banner').style.display='none'" style="margin-left:10px;cursor:pointer;opacity:.6">✕</span>
+</div>
+<script>
+try{
+  var ua=navigator.userAgent;
+  var isClaudeWebview=!ua.includes('Safari') || (ua.includes('Mobile') && !ua.includes('Version'));
+  if(isClaudeWebview || window.location.protocol==='about:' || window.location.href.includes('artifact')){
+    document.getElementById('safari-banner').style.display='block';
+  }
+}catch(e){}
+</script>
 <button class="float-save" onclick="cloudSave()" title="Guardar en la nube">💾 Guardar</button>
 <div class="content">
 
@@ -523,11 +534,12 @@ p,span,div,input,textarea,select,button,label{
 <div id="toast"></div>
 
 <script>
-// Suprimir errores de promesas no manejadas y errores cross-origin
-window.addEventListener('unhandledrejection', function(e){ try{e.preventDefault();}catch(ex){} return true; });
-window.onerror = function(msg, src, line, col, err){ return true; }; // suprimir todos los errores de consola
-// Polyfill por si acaso
-if(!window.Promise){window.Promise={resolve:function(){return{then:function(){return this;},catch:function(){return this;}}}};}
+// Suppress unhandled promise rejections (fetch blocked in sandboxed WebViews like Claude iOS preview)
+window.addEventListener('unhandledrejection', function(e){ e.preventDefault(); e.stopPropagation(); return true; });
+window.onerror = function(msg, src, line, col, err){
+  if(src==='' || src==='about:blank') return true; // suppress cross-origin errors
+  return false;
+};
 
 // ══ CORE ══
 const P='cdm_';
@@ -543,31 +555,24 @@ function ls(k,v){
 }
 function todayKey(){return new Date().toISOString().slice(0,10);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function toast(msg,dur){var d=dur||2400;try{var e=document.getElementById('toast');if(e){e.textContent=msg;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},d);}}catch(ex){}}
+function toast(msg,dur=2400){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),dur);}
 function copy(txt){navigator.clipboard.writeText(txt).then(()=>toast('✅ Copiado'));}
 function toggleHist(id){const el=document.getElementById(id);if(el)el.classList.toggle('open');}
 
 // ══ TABS ══
 let currentTab=1;
 function showTab(n){
-  try{currentTab=n;}catch(ex){}
-  try{
-    var btns=document.querySelectorAll('.tab-btn');
-    for(var i=0;i<btns.length;i++) btns[i].classList.toggle('active',i===n-1);
-  }catch(ex){}
-  try{
-    var panels=document.querySelectorAll('.tab-panel');
-    for(var i=0;i<panels.length;i++) panels[i].classList.toggle('active',i===n-1);
-  }catch(ex){}
-  try{if(n===2)renderH2();}catch(ex){}
-  try{if(n===3)renderH3();}catch(ex){}
-  try{if(n===4)h4RenderAll();}catch(ex){}
-  try{if(n===5){renderH5();inmoInit();}}catch(ex){}
-  try{if(n===6)renderH6();}catch(ex){}
-  try{
-    var btn=document.querySelectorAll('.tab-btn')[n-1];
-    if(btn)btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-  }catch(ex){}
+  currentTab=n;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===n-1));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===n-1));
+  if(n===2)renderH2();
+  if(n===3)renderH3();
+  if(n===4)h4RenderAll();
+  if(n===5){renderH5();try{inmoInit();}catch(e){}}
+  if(n===6)renderH6();
+  // scroll active tab into view on mobile
+  const btn=document.querySelectorAll('.tab-btn')[n-1];
+  if(btn)btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 }
 
 // ══ CLOUD SYNC ══
@@ -932,7 +937,7 @@ function h4SaveDone(k,arr){ls('h4_done_'+k,arr.slice(0,100));}
 
 
 
-function h4Del(k,id){id=parseInt(id);h4SaveList(k,h4LoadList(k).filter(t=>t.id!==id));h4RenderList(k,h4Cls(k));}
+
 
 function h4Cls(k){return{high:'bl-high',mid:'bl-mid',low:'bl-low',shop:'bl-shop',pay:'bl-pay'}[k]||'bl-day';}
 function h4RenderAll(){h4InjectFixed();h4RenderDay();['high','mid','low','shop','pay'].forEach(k=>h4RenderList(k,h4Cls(k)));try{renderFixedTasks();}catch(e){}}
@@ -1273,29 +1278,67 @@ function h4RenderList(k,cls){
   if(cntEl)cntEl.textContent=arr.length;
   var el=document.getElementById('h4-list-'+k);
   if(!el)return;
-  el.innerHTML=arr.map(function(t){
-    return '<div class="h4-item '+cls+'">'
-      +(t.emp?empTag(t.emp):'')
-      +'<div class="h4-chk" onclick="h4Tog(''+k+'','+t.id+')"></div>'
-      +'<span class="h4-txt">'+(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
-      +'<button class="h4-rm" onclick="h4Del(''+k+'','+t.id+')">✕</button>'
-      +'</div>';
-  }).join('')||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">—</div>';
+  var html='';
+  for(var i=0;i<arr.length;i++){
+    var t=arr[i];
+    var tag=t.emp?empTag(t.emp):'';
+    var txt=(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    html+='<div class="h4-item '+cls+'" data-k="'+k+'" data-id="'+t.id+'">';
+    html+=tag;
+    html+='<div class="h4-chk" onclick="h4Tog(this)"></div>';
+    html+='<span class="h4-txt">'+txt+'</span>';
+    html+='<button class="h4-rm" onclick="h4DelBtn(this)">✕</button>';
+    html+='</div>';
+  }
+  el.innerHTML=html||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">—</div>';
   var dEl=document.getElementById('h4-done-'+k);
   if(dEl){
-    dEl.innerHTML=done.length?done.slice(0,20).map(function(e){
-      return '<div class="hist-item"><span class="hist-date">'+e.date+'</span>'
-        +(e.emp?'<span class="emp-tag" style="background:'+EMP_COLORS[e.emp||'']+'20;color:'+EMP_COLORS[e.emp||'']+'">'+EMP_NAMES[e.emp||'']+'</span> ':'')
-        +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim)">'+esc(e.text)+'</span></div>';
-    }).join(''):'<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
+    if(done.length){
+      var dhtml='';
+      for(var j=0;j<Math.min(done.length,20);j++){
+        var e=done[j];
+        var ec=EMP_COLORS[e.emp||']'||''];
+        var en=EMP_NAMES[e.emp||''];
+        dhtml+='<div class="hist-item">';
+        dhtml+='<span class="hist-date">'+e.date+'</span>';
+        if(e.emp){dhtml+='<span class="emp-tag" style="background:'+EMP_COLORS[e.emp]+'20;color:'+EMP_COLORS[e.emp]+'">'+EMP_NAMES[e.emp]+'</span> ';}
+        dhtml+='<span class="hist-txt" style="text-decoration:line-through;color:var(--dim)">'+esc(e.text)+'</span>';
+        dhtml+='</div>';
+      }
+      dEl.innerHTML=dhtml;
+    } else {
+      dEl.innerHTML='<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
+    }
   }
 }
 
-// Override h4Tog to preserve emp field
-function h4Tog(k,id){
-  id=parseInt(id);
+function h4Tog(el){
+  var item=el.closest('[data-k]');
+  if(!item)return;
+  var k=item.getAttribute('data-k');
+  var id=parseInt(item.getAttribute('data-id'));
   var arr=h4LoadList(k);
   var x=arr.find(function(t){return t.id===id;});
+  if(!x)return;
+  var done=h4LoadDone(k);
+  done.unshift({date:todayKey(),text:x.text,emp:x.emp||''});
+  h4SaveDone(k,done);
+  h4SaveList(k,arr.filter(function(t){return t.id!==id;}));
+  h4RenderList(k,h4Cls(k));
+  toast('✅ Realizada');
+}
+
+function h4DelBtn(el){
+  var item=el.closest('[data-k]');
+  if(!item)return;
+  var k=item.getAttribute('data-k');
+  var id=parseInt(item.getAttribute('data-id'));
+  h4SaveList(k,h4LoadList(k).filter(function(t){return t.id!==id;}));
+  h4RenderList(k,h4Cls(k));
+}
+
+
+);
   if(!x)return;
   var done=h4LoadDone(k);
   done.unshift({date:todayKey(),text:x.text,emp:x.emp||''});
@@ -1461,7 +1504,7 @@ window.addEventListener('load', function(){
   // Init cada sección de forma aislada — si una falla no rompe las demás
   setTimeout(function(){try{renderPillars();}catch(e){}},0);
   setTimeout(function(){try{renderH1IntHist();}catch(e){}},0);
-  setTimeout(function(){try{loadH1Frase(false);}catch(e){}},2000); // delay mayor para no bloquear UI
+  setTimeout(function(){try{loadH1Frase(false);}catch(e){}},100);
   setTimeout(function(){try{renderFixedTasks();}catch(e){}},50);
   setTimeout(function(){try{h4InjectFixed();}catch(e){}},50);
   setTimeout(function(){try{inmoInit();}catch(e){}},50);
