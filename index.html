@@ -574,6 +574,257 @@ function toggleHist(id){const el=document.getElementById(id);if(el)el.classList.
 
 // ══ TABS ══
 let currentTab=1;
+function getSyncCfg(){return ls('sync_cfg')||{apiKey:'',binId:'',provider:'jsonbin'};}
+function setSyncStatus(txt,cls=''){const el=document.getElementById('sync-status');el.textContent=txt;el.className='sync-status'+(cls?' '+cls:'');}
+
+function getAllData(){
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith(P));
+  const d={};
+  keys.forEach(k=>{try{d[k.slice(P.length)]=JSON.parse(localStorage.getItem(k));}catch(e){d[k.slice(P.length)]=localStorage.getItem(k);}});
+  return d;
+}
+function setAllData(d){
+  Object.entries(d).forEach(([k,v])=>{localStorage.setItem(P+k,typeof v==='string'?v:JSON.stringify(v));});
+}
+
+function cloudSave(){
+  var cfg=getSyncCfg();
+  if(!cfg.apiKey||!cfg.binId){openSettings();return;}
+  setSyncStatus('Guardando…');
+  fetch('https://api.jsonbin.io/v3/b/'+cfg.binId,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':cfg.apiKey},
+    body:JSON.stringify(getAllData())
+  })
+  .then(function(res){
+    if(!res.ok)throw new Error(res.status);
+    try{ls('last_sync',new Date().toISOString());}catch(e){}
+    setSyncStatus('✓ '+new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}),'ok');
+    toast('💾 Guardado en la nube');
+  })
+  .catch(function(){setSyncStatus('Error','err');toast('❌ Error al guardar — revisa configuración');});
+}
+
+function cloudLoad(){
+  var cfg=getSyncCfg();
+  if(!cfg.apiKey||!cfg.binId){openSettings();return;}
+  setSyncStatus('Cargando…');
+  fetch('https://api.jsonbin.io/v3/b/'+cfg.binId+'/latest',{headers:{'X-Master-Key':cfg.apiKey,'X-Bin-Meta':false}})
+  .then(function(res){if(!res.ok)throw new Error(res.status);return res.json();})
+  .then(function(d){
+    setAllData(d);setSyncStatus('✓ Cargado','ok');
+    toast('☁️ Datos cargados — recargando…');
+    setTimeout(function(){location.reload();},800);
+  })
+  .catch(function(){setSyncStatus('Error','err');toast('❌ Error al cargar — revisa configuración');});
+}
+
+// export/import local JSON
+function exportLocal(){
+  const b=new Blob([JSON.stringify(getAllData(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='nano_datos_'+todayKey()+'.json';a.click();toast('💾 JSON exportado');
+}
+function importLocal(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{setAllData(JSON.parse(ev.target.result));toast('✅ Datos importados — recargando…');setTimeout(()=>location.reload(),800);}catch(ex){toast('❌ Archivo inválido');}};r.readAsText(f);};
+  inp.click();
+}
+
+// SETTINGS MODAL
+function openSettings(){
+  const cfg=getSyncCfg();
+  showModal('⚙️ Configuración de sync',`
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px">
+      Para sync automático entre dispositivos usamos <strong style="color:var(--text)">JSONBin.io</strong> (gratis).<br>
+      Pasos: 1) Crear cuenta en <a href="https://jsonbin.io" target="_blank" style="color:var(--indigo)">jsonbin.io</a> → 
+      2) API Keys → crear Master Key → 
+      3) New Bin → crear bin vacío → copiar el ID (después del /b/).
+    </p>
+    <label>API Key (Master Key)</label>
+    <input type="password" id="cfg-key" value="${esc(cfg.apiKey)}" placeholder="$2a$10$..."/>
+    <label>Bin ID</label>
+    <input type="text" id="cfg-bin" value="${esc(cfg.binId)}" placeholder="6487abc123..."/>
+    <hr style="border-color:var(--border);margin:16px 0">
+    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">O usa JSON manual (sin cuenta):</p>
+    <div style="display:flex;gap:7px">
+      <button class="btn b-ghost" onclick="exportLocal()">📥 Exportar JSON</button>
+      <button class="btn b-ghost" onclick="importLocal()">📤 Importar JSON</button>
+    </div>
+  `,[
+    {txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},
+    {txt:'Guardar configuración',cls:'b-gold',fn:'saveSyncCfg()'},
+  ]);
+}
+function saveSyncCfg(){
+  ls('sync_cfg',{apiKey:document.getElementById('cfg-key').value.trim(),binId:document.getElementById('cfg-bin').value.trim()});
+  closeModal();setSyncStatus('Configurado');toast('✅ Configuración guardada');
+}
+
+// PILLAR EDIT MODAL
+function editPillar(key){
+  const info=ls('h1_info')||h1DefaultInfo();
+  showModal('✏️ Editar — '+key,`
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Este texto lo uso para generar tu reflexión diaria de forma personalizada.</p>
+    <label>Descripción</label>
+    <textarea id="pillar-edit-txt" style="width:100%;height:100px;padding:8px 10px;resize:vertical">${esc(info[key]||'')}</textarea>
+  `,[
+    {txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},
+    {txt:'Guardar',cls:'b-gold',fn:`savePillar('${key}')`},
+  ]);
+}
+function savePillar(key){
+  const info=ls('h1_info')||h1DefaultInfo();
+  info[key]=document.getElementById('pillar-edit-txt').value.trim();
+  ls('h1_info',info);closeModal();renderPillars();
+  ls('h1_frase_cache',null);// invalidate cache so next phrase uses new info
+  toast('✅ Guardado — se usará en la próxima reflexión');
+}
+
+// MODAL HELPER
+function showModal(title,body,btns){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('modal-footer').innerHTML=btns.map(b=>`<button class="btn ${b.cls}" onclick="${b.fn}">${b.txt}</button>`).join('');
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+document.getElementById('modal-bg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// ══ H1 AGRADECIMIENTO ══
+function h1DefaultInfo(){return{
+  familia:'Andrea (esposa), Maite y Pampi (hijas). Construiste una familia que te ama y que es el motor de todo lo que haces.',
+  identidad:'Arquitecto, constructor, empresario, locutor, maestro de música, masón. 7 empresas. El niño Nano que soñaba con ser alguien importante ya lo logró — y sigue creciendo.',
+  tiempo:'El bloque 16:00–18:00 es tuyo. La once familiar no se negocia. El almuerzo con la familia es sagrado. Privilegiar el tiempo es lo que te permite seguir construyendo.'
+};}
+
+function renderPillars(){
+  try{
+    var info=ls('h1_info')||h1DefaultInfo();
+    var defaults=h1DefaultInfo();
+    var pf=document.getElementById('pillar-familia');
+    var pi=document.getElementById('pillar-identidad');
+    var pt=document.getElementById('pillar-tiempo');
+    if(pf)pf.textContent=info.familia||defaults.familia;
+    if(pi)pi.textContent=info.identidad||defaults.identidad;
+    if(pt)pt.textContent=info.tiempo||defaults.tiempo;
+  }catch(e){console.warn('renderPillars:',e);}
+}
+
+function initH1(){
+  try{document.getElementById('h1-date').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();}catch(e){}
+  try{renderPillars();}catch(e){}
+  try{renderH1IntHist();}catch(e){}
+  try{loadH1Frase(false);}catch(e){}
+}
+
+function renderPillars(){
+  try{
+    var info=ls('h1_info')||h1DefaultInfo();
+    var defaults=h1DefaultInfo();
+    var pf=document.getElementById('pillar-familia');
+    var pi=document.getElementById('pillar-identidad');
+    var pt=document.getElementById('pillar-tiempo');
+    if(pf)pf.textContent=info.familia||defaults.familia;
+    if(pi)pi.textContent=info.identidad||defaults.identidad;
+    if(pt)pt.textContent=info.tiempo||defaults.tiempo;
+  }catch(e){console.warn('renderPillars:',e);}
+}
+
+function initH1(){
+  try{document.getElementById('h1-date').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();}catch(e){}
+  try{renderPillars();}catch(e){}
+  try{renderH1IntHist();}catch(e){}
+  try{loadH1Frase(false);}catch(e){}
+}
+
+function loadH1Frase(force){
+  const el=document.getElementById('h1-frase');
+  if(!el) return;
+  try{
+    const cached=ls('h1_frase_cache');
+    if(!force&&cached&&cached.date===todayKey()){
+      el.textContent=cached.frase;el.classList.remove('loading');return;
+    }
+  }catch(e){}
+  el.textContent='Toca "Nueva reflexión" para cargar (requiere Safari con internet)';
+  el.classList.add('loading');
+  const info=ls('h1_info')||h1DefaultInfo();
+  const fallback='Nano, el niño que soñabas ser ya existe — y tiene siete empresas, una familia que lo ama y todavía tiempo para la guitarra. Sigue siendo ese hombre.';
+  const prompt='Eres el coach personal de Nano, emprendedor chileno ~40 años. Familia: '+info.familia+'. Quien es: '+info.identidad+'. Hoy es '+new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'})+'. Escríbele una reflexión personal de 3-5 líneas que lo conecte con gratitud y lo motive. Estilo variado: poético, directo o filosófico. Usa el nombre Nano. SOLO la reflexión, sin comillas externas.';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,messages:[{role:'user',content:prompt}]})
+  })
+  .then(function(res){return res.json();})
+  .then(function(data){
+    const frase=(data&&data.content&&data.content[0]&&data.content[0].text)||fallback;
+    try{ls('h1_frase_cache',{date:todayKey(),frase:frase.trim()});}catch(e){}
+    if(el){el.textContent=frase.trim();el.classList.remove('loading');}
+  })
+  .catch(function(){
+    if(el){el.textContent=fallback;el.classList.remove('loading');}
+  });
+}
+
+function saveH1Intention(){
+  const inp=document.getElementById('h1-int-input');
+  const txt=inp.value.trim();if(!txt)return;
+  const list=ls('h1_intentions')||[];
+  list.unshift({date:todayKey(),time:new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}),text:txt});
+  ls('h1_intentions',list.slice(0,90));inp.value='';
+  renderH1IntHist();toast('✅ Intención guardada');
+}
+
+
+function loadH1Frase(force){
+  const el=document.getElementById('h1-frase');
+  if(!el) return;
+  try{
+    const cached=ls('h1_frase_cache');
+    if(!force&&cached&&cached.date===todayKey()){
+      el.textContent=cached.frase;el.classList.remove('loading');return;
+    }
+  }catch(e){}
+  el.textContent='Toca "Nueva reflexión" para cargar (requiere Safari con internet)';
+  el.classList.add('loading');
+  const info=ls('h1_info')||h1DefaultInfo();
+  const fallback='Nano, el niño que soñabas ser ya existe — y tiene siete empresas, una familia que lo ama y todavía tiempo para la guitarra. Sigue siendo ese hombre.';
+  const prompt='Eres el coach personal de Nano, emprendedor chileno ~40 años. Familia: '+info.familia+'. Quien es: '+info.identidad+'. Hoy es '+new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'})+'. Escríbele una reflexión personal de 3-5 líneas que lo conecte con gratitud y lo motive. Estilo variado: poético, directo o filosófico. Usa el nombre Nano. SOLO la reflexión, sin comillas externas.';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,messages:[{role:'user',content:prompt}]})
+  })
+  .then(function(res){return res.json();})
+  .then(function(data){
+    const frase=(data&&data.content&&data.content[0]&&data.content[0].text)||fallback;
+    try{ls('h1_frase_cache',{date:todayKey(),frase:frase.trim()});}catch(e){}
+    if(el){el.textContent=frase.trim();el.classList.remove('loading');}
+  })
+  .catch(function(){
+    if(el){el.textContent=fallback;el.classList.remove('loading');}
+  });
+}
+
+function saveH1Intention(){
+  const inp=document.getElementById('h1-int-input');
+  const txt=inp.value.trim();if(!txt)return;
+  const list=ls('h1_intentions')||[];
+  list.unshift({date:todayKey(),time:new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}),text:txt});
+  ls('h1_intentions',list.slice(0,90));inp.value='';
+  renderH1IntHist();toast('✅ Intención guardada');
+}
+
+function renderH1IntHist(){
+  const list=ls('h1_intentions')||[];
+  const el=document.getElementById('h1-int-hist');if(!el)return;
+  if(!list.length){el.innerHTML='<div style="color:var(--dim);font-size:11px;padding:6px 0">Sin intenciones registradas aún.</div>';return;}
+  el.innerHTML=list.slice(0,30).map(i=>`<div class="hist-item"><span class="hist-date">${i.date}<br>${i.time||''}</span><span class="hist-txt">${esc(i.text)}</span></div>`).join('');
+}
+
+// ══ H2 SALUDOS ══
+
 function showTab(n){
   try{currentTab=n;}catch(e){}
   var pm={1:'h1',2:'h_agenda',3:'h2',4:'h3',5:'h4',6:'h5',7:'h6',8:'h8'};
@@ -587,7 +838,7 @@ function showTab(n){
   try{if(n===2)renderCal();}catch(e){}
   try{if(n===3)renderH2();}catch(e){}
   try{if(n===4)renderH3();}catch(e){}
-  try{if(n===5)h4RenderAll();}catch(e){}
+  try{if(n===5){h4Day=todayKey();h4RenderAll();}}catch(e){}
   try{if(n===6){renderH5();try{inmoInit();}catch(e){}}}catch(e){}
   try{if(n===7)renderH6();}catch(e){}
   try{if(n===8)renderResumen();}catch(e){}
@@ -695,6 +946,7 @@ function h2Gen(id,name){
 
 // ══ H3 DELEGAR ══
 const H3_EMPRESAS=[
+  {id:'moragas',label:'Moragas Gas',color:'#fb923c',people:['Distribución']},
   {id:'hm',label:'HM Arquitectura',color:'#818cf8',people:['Linoska','Bárbara']},
   {id:'nano',label:'Nanohome Constructora',color:'#f87171',people:['Daniel','Alex','Juan','Andrés','Iván']},
   {id:'lola',label:'Lola FM',color:'#fbbf24',people:['Kathy','Rodri']},
