@@ -671,28 +671,29 @@ function openSettings(){
   document.getElementById("modal-title").textContent="Configurar Sync";
   var body="";
   if(binId&&cfg.apiKey){
-    body+="<div style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#34d399'>✅ Sync activado — datos guardados en la nube</div>";
-    body+="<div style='font-size:10px;font-weight:700;color:#6b7280;margin-bottom:4px'>Tu codigo de sync (compartir entre dispositivos)</div>";
-    body+="<div style='font-family:monospace;font-size:10px;color:#d4a843;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:6px;padding:8px;word-break:break-all;margin-bottom:10px'>"+binId+"|"+cfg.apiKey+"</div>";
-    body+="<p style='font-size:11px;color:#6b7280;margin-bottom:10px'>Copia ese codigo en el otro dispositivo para conectarlos.</p>";
+    body+="<div style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#34d399'>Sync activado</div>";
+    body+="<div style='font-size:10px;font-weight:700;color:#6b7280;margin-bottom:4px'>Codigo para conectar otros dispositivos</div>";
+    body+="<div style='font-family:monospace;font-size:9px;color:#d4a843;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:6px;padding:8px;word-break:break-all;margin-bottom:10px'>"+binId+"|"+cfg.apiKey+"</div>";
   } else {
-    body+="<div style='font-size:12px;font-weight:700;color:#fff;margin-bottom:8px'>Paso 1: Crea una cuenta gratis en JSONBin.io</div>";
-    body+="<a href='https://jsonbin.io' target='_blank' style='display:block;text-align:center;padding:8px;background:rgba(129,140,248,.15);border:1px solid rgba(129,140,248,.3);border-radius:8px;color:#818cf8;font-size:12px;text-decoration:none;margin-bottom:12px'>Ir a jsonbin.io →</a>";
-    body+="<div style='font-size:12px;font-weight:700;color:#fff;margin-bottom:4px'>Paso 2: Pega tu API Key (Master Key)</div>";
-    body+="<input type='text' id='sync-api-key' style='width:100%;margin-bottom:8px;font-family:monospace;font-size:11px' placeholder='$2b$10$... (tu Master Key de JSONBin)'/>";
-    body+="<button class='btn b-gold' style='width:100%;margin-bottom:14px;justify-content:center' onclick='createSyncBin()'>Crear y activar sync</button>";
-    body+="<div style='font-size:11px;color:#6b7280;margin-bottom:14px'>O si ya tienes un codigo de otro dispositivo:</div>";
-    body+="<input type='text' id='existing-bin-id' style='width:100%;margin-bottom:8px;font-family:monospace;font-size:11px' placeholder='Pega el codigo (binId|apiKey)'/>";
-    body+="<button class='btn b-indigo' style='width:100%;margin-bottom:12px;justify-content:center' onclick='connectExistingBin()'>Conectar con codigo existente</button>";
+    body+="<div style='font-size:11px;font-weight:700;color:#fff;margin-bottom:4px'>Paso 1 — Tu API Key de jsonbin.io</div>";
+    body+="<div style='font-size:10px;color:#6b7280;margin-bottom:6px'>En jsonbin.io → API Keys → copia tu Master Key</div>";
+    body+="<input type='text' id='sync-api-key' style='width:100%;margin-bottom:10px;font-family:monospace;font-size:10px' placeholder='Pega aqui tu Master Key ($2a$10$...)'/>";
+    body+="<button class='btn b-gold' id='btn-create-sync' style='width:100%;margin-bottom:14px;justify-content:center' onclick='createSyncBin()'>Crear y activar sync</button>";
+    body+="<hr style='border-color:rgba(255,255,255,.1);margin:0 0 10px'/>";
+    body+="<div style='font-size:11px;font-weight:700;color:#fff;margin-bottom:4px'>O conectar desde otro dispositivo</div>";
+    body+="<div style='font-size:10px;color:#6b7280;margin-bottom:6px'>Pega el codigo completo (binId|apiKey)</div>";
+    body+="<input type='text' id='existing-bin-id' style='width:100%;margin-bottom:8px;font-family:monospace;font-size:10px' placeholder='abc123...|$2a$10$...'/>";
+    body+="<button class='btn b-indigo' style='width:100%;justify-content:center' onclick='connectExistingBin()'>Conectar</button>";
   }
   body+="<hr style='border-color:rgba(255,255,255,.1);margin:10px 0'/>";
   body+="<div style='display:flex;gap:7px'><button class='btn b-ghost' onclick='exportLocal();closeModal()'>Exportar JSON</button><button class='btn b-ghost' onclick='importLocal()'>Importar JSON</button></div>";
   document.getElementById("modal-body").innerHTML=body;
   var footer="<button class='btn b-ghost' onclick='closeModal()'>Cerrar</button>";
-  if(binId&&cfg.apiKey)footer+="<button class='btn b-red' onclick='disconnectSync()'>Desconectar sync</button>";
+  if(binId&&cfg.apiKey)footer+="<button class='btn b-red' onclick='disconnectSync()'>Desconectar</button>";
   document.getElementById("modal-footer").innerHTML=footer;
   document.getElementById("modal-bg").classList.add("open");
 }
+
 
 function saveSyncCfg(){
   ls('sync_cfg',{apiKey:document.getElementById('cfg-key').value.trim(),binId:document.getElementById('cfg-bin').value.trim()});
