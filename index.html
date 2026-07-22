@@ -612,31 +612,46 @@ function setAllData(d){
 
 function cloudSave(){
   var binId=ls("sync_bin_id");
-  if(binId){
+  var cfg=ls("sync_cfg")||{};
+  if(binId&&cfg.apiKey){
     try{setSyncStatus("Guardando...","ok");}catch(e){}
-    fetch("https://api.jsonbin.io/v3/b/"+binId,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(getAllData())})
+    fetch("https://api.jsonbin.io/v3/b/"+binId,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json","X-Master-Key":cfg.apiKey},
+      body:JSON.stringify(getAllData())
+    })
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(){try{setSyncStatus("Guardado","ok");}catch(e){}toast("Guardado en la nube");})
-    .catch(function(){try{setSyncStatus("Sin sync");}catch(e){}exportLocal();toast("Sync falló - datos exportados");});
+    .then(function(){try{setSyncStatus("Guardado ✓","ok");}catch(e){}toast("Guardado en la nube ✓");})
+    .catch(function(e){try{setSyncStatus("Error sync");}catch(e2){}toast("Error al guardar: "+e.message);});
   } else {
-    exportLocal();toast("Datos guardados - revisa Descargas");
+    exportLocal();toast("Exportado — activa sync en ⚙️ para guardar en la nube");
   }
 }
 
 
+
 function cloudLoad(){
-  var cfg=getSyncCfg();
-  if(!cfg.apiKey||!cfg.binId){openSettings();return;}
-  setSyncStatus('Cargando…');
-  fetch('https://api.jsonbin.io/v3/b/'+cfg.binId+'/latest',{headers:{'X-Master-Key':cfg.apiKey,'X-Bin-Meta':false}})
-  .then(function(res){if(!res.ok)throw new Error(res.status);return res.json();})
-  .then(function(d){
-    setAllData(d);setSyncStatus('✓ Cargado','ok');
-    toast('☁️ Datos cargados — recargando…');
-    setTimeout(function(){location.reload();},800);
+  var binId=ls("sync_bin_id");
+  var cfg=ls("sync_cfg")||{};
+  if(!binId||!cfg.apiKey){toast("Sync no configurado");return;}
+  try{setSyncStatus("Cargando...","ok");}catch(e){}
+  fetch("https://api.jsonbin.io/v3/b/"+binId+"/latest",{
+    headers:{"X-Master-Key":cfg.apiKey}
   })
-  .catch(function(){setSyncStatus('Error','err');toast('❌ Error al cargar — revisa configuración');});
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+  .then(function(d){
+    var data=d.record||d;
+    if(data&&typeof data==="object"){
+      Object.keys(data).forEach(function(k){ls(k,data[k]);});
+      try{setSyncStatus("Sincronizado ✓","ok");}catch(e){}
+      toast("Datos cargados desde la nube ✓");
+      try{h4RenderAll();}catch(e){}
+      try{renderH3();}catch(e){}
+    }
+  })
+  .catch(function(e){try{setSyncStatus("Error sync");}catch(e2){}toast("Error al cargar: "+e.message);});
 }
+
 
 // export/import local JSON
 function exportLocal(){
@@ -651,29 +666,34 @@ function importLocal(){
 
 // SETTINGS MODAL
 function openSettings(){
-  const cfg=getSyncCfg();
-  showModal('⚙️ Configuración de sync',`
-    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px">
-      Para sync automático entre dispositivos usamos <strong style="color:var(--text)">JSONBin.io</strong> (gratis).<br>
-      Pasos: 1) Crear cuenta en <a href="https://jsonbin.io" target="_blank" style="color:var(--indigo)">jsonbin.io</a> → 
-      2) API Keys → crear Master Key → 
-      3) New Bin → crear bin vacío → copiar el ID (después del /b/).
-    </p>
-    <label>API Key (Master Key)</label>
-    <input type="password" id="cfg-key" value="${esc(cfg.apiKey)}" placeholder="$2a$10$..."/>
-    <label>Bin ID</label>
-    <input type="text" id="cfg-bin" value="${esc(cfg.binId)}" placeholder="6487abc123..."/>
-    <hr style="border-color:var(--border);margin:16px 0">
-    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">O usa JSON manual (sin cuenta):</p>
-    <div style="display:flex;gap:7px">
-      <button class="btn b-ghost" onclick="exportLocal()">📥 Exportar JSON</button>
-      <button class="btn b-ghost" onclick="importLocal()">📤 Importar JSON</button>
-    </div>
-  `,[
-    {txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},
-    {txt:'Guardar configuración',cls:'b-gold',fn:'saveSyncCfg()'},
-  ]);
+  var cfg=ls("sync_cfg")||{};
+  var binId=ls("sync_bin_id")||"";
+  document.getElementById("modal-title").textContent="Configurar Sync";
+  var body="";
+  if(binId&&cfg.apiKey){
+    body+="<div style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#34d399'>✅ Sync activado — datos guardados en la nube</div>";
+    body+="<div style='font-size:10px;font-weight:700;color:#6b7280;margin-bottom:4px'>Tu codigo de sync (compartir entre dispositivos)</div>";
+    body+="<div style='font-family:monospace;font-size:10px;color:#d4a843;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:6px;padding:8px;word-break:break-all;margin-bottom:10px'>"+binId+"|"+cfg.apiKey+"</div>";
+    body+="<p style='font-size:11px;color:#6b7280;margin-bottom:10px'>Copia ese codigo en el otro dispositivo para conectarlos.</p>";
+  } else {
+    body+="<div style='font-size:12px;font-weight:700;color:#fff;margin-bottom:8px'>Paso 1: Crea una cuenta gratis en JSONBin.io</div>";
+    body+="<a href='https://jsonbin.io' target='_blank' style='display:block;text-align:center;padding:8px;background:rgba(129,140,248,.15);border:1px solid rgba(129,140,248,.3);border-radius:8px;color:#818cf8;font-size:12px;text-decoration:none;margin-bottom:12px'>Ir a jsonbin.io →</a>";
+    body+="<div style='font-size:12px;font-weight:700;color:#fff;margin-bottom:4px'>Paso 2: Pega tu API Key (Master Key)</div>";
+    body+="<input type='text' id='sync-api-key' style='width:100%;margin-bottom:8px;font-family:monospace;font-size:11px' placeholder='$2b$10$... (tu Master Key de JSONBin)'/>";
+    body+="<button class='btn b-gold' style='width:100%;margin-bottom:14px;justify-content:center' onclick='createSyncBin()'>Crear y activar sync</button>";
+    body+="<div style='font-size:11px;color:#6b7280;margin-bottom:14px'>O si ya tienes un codigo de otro dispositivo:</div>";
+    body+="<input type='text' id='existing-bin-id' style='width:100%;margin-bottom:8px;font-family:monospace;font-size:11px' placeholder='Pega el codigo (binId|apiKey)'/>";
+    body+="<button class='btn b-indigo' style='width:100%;margin-bottom:12px;justify-content:center' onclick='connectExistingBin()'>Conectar con codigo existente</button>";
+  }
+  body+="<hr style='border-color:rgba(255,255,255,.1);margin:10px 0'/>";
+  body+="<div style='display:flex;gap:7px'><button class='btn b-ghost' onclick='exportLocal();closeModal()'>Exportar JSON</button><button class='btn b-ghost' onclick='importLocal()'>Importar JSON</button></div>";
+  document.getElementById("modal-body").innerHTML=body;
+  var footer="<button class='btn b-ghost' onclick='closeModal()'>Cerrar</button>";
+  if(binId&&cfg.apiKey)footer+="<button class='btn b-red' onclick='disconnectSync()'>Desconectar sync</button>";
+  document.getElementById("modal-footer").innerHTML=footer;
+  document.getElementById("modal-bg").classList.add("open");
 }
+
 function saveSyncCfg(){
   ls('sync_cfg',{apiKey:document.getElementById('cfg-key').value.trim(),binId:document.getElementById('cfg-bin').value.trim()});
   closeModal();setSyncStatus('Configurado');toast('✅ Configuración guardada');
@@ -1139,13 +1159,13 @@ function renderH6(){
   // workout cards
   const board=document.getElementById('h6-board');
   board.innerHTML=Object.entries(WORKOUT).map(([did,d])=>{
-    const todayDone=h6TodaySession(did);
+    const sessions2=h6LoadSessions();const thisWeekStart2=getMonday(new Date()).toISOString().slice(0,10);const todayDone=sessions2.some(function(s){return s.dayId===did&&s.date>=thisWeekStart2;});
     const weights=h6LoadWeights(did);
     return`<div class="day-workout" id="h6-card-${did}">
       <div class="dw-hdr" onclick="h6ToggleCard('${did}')">
         <span class="dw-day">${DAY_NAMES[did]}</span>
         <span class="dw-name" style="color:${d.color}">${d.emoji} ${d.name}</span>
-        <span class="dw-status ${todayDone?'done':'pending'}">${todayDone?'✅ Completado hoy':'Pendiente'}</span>
+        <span class="dw-status ${todayDone?'done':'pending'}">${todayDone?'✅ Hecho esta semana':'Pendiente'}</span>
         <span style="color:var(--muted);font-size:13px;margin-left:8px">▼</span>
       </div>
       <div class="dw-body" id="h6-body-${did}">
@@ -1373,7 +1393,7 @@ function openAddFixed(){
   showModal('📌 Agregar tarea fija recurrente',
     '<label>Tarea</label><input type="text" id="fix-txt" style="width:100%" placeholder="Ej: Tocar batería"/>'
     +'<label>Día de la semana</label>'
-    +'<select id="fix-day" style="width:100%"><option value="1">Lunes</option><option value="2">Martes</option><option value="3" selected>Miércoles</option><option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option></select>'
+    +'<select id="fix-day" style="width:100%"><option value="1-5">Lunes a Viernes</option><option value="6-0">Sábado y Domingo</option><option value="all">Todos los días</option><option value="1">Solo Lunes</option><option value="2">Solo Martes</option><option value="3">Solo Miércoles</option><option value="4">Solo Jueves</option><option value="5">Solo Viernes</option><option value="6">Solo Sábado</option><option value="0">Solo Domingo</option></select>'
     +'<label>Hora (opcional)</label><input type="text" id="fix-time" style="width:100%" placeholder="Ej: 11:00"/>'
     +'<label>Empresa (opcional)</label><select id="fix-emp" style="width:100%"><option value="">Sin empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmobiliaria</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select>',
     [{txt:'Cancelar',cls:'b-ghost',fn:'closeModal()'},{txt:'Guardar tarea fija',cls:'b-gold',fn:'saveFixed()'}]
@@ -1384,14 +1404,18 @@ function saveFixed(){
   var txt=(document.getElementById('fix-txt')||{}).value||'';
   txt=txt.trim();if(!txt)return;
   var arr=h4LoadFixed();
-  arr.push({
-    text:txt,
-    dayOfWeek:parseInt((document.getElementById('fix-day')||{}).value||'1'),
-    time:((document.getElementById('fix-time')||{}).value||'').trim(),
-    emp:((document.getElementById('fix-emp')||{}).value||'')
-  });
+  var dayVal=(document.getElementById('fix-day')||{}).value||'1';
+  var time=((document.getElementById('fix-time')||{}).value||'').trim();
+  var emp=((document.getElementById('fix-emp')||{}).value||'');
+  var days=[];
+  if(dayVal==='1-5')days=[1,2,3,4,5];
+  else if(dayVal==='6-0')days=[6,0];
+  else if(dayVal==='all')days=[0,1,2,3,4,5,6];
+  else days=[parseInt(dayVal)];
+  days.forEach(function(d){arr.push({text:txt,dayOfWeek:d,time:time,emp:emp});});
   h4SaveFixed(arr);closeModal();renderFixedTasks();
-  toast('✅ Tarea fija guardada — aparecerá cada '+DIAS_SEMANA[arr[arr.length-1].dayOfWeek]);
+  var label=dayVal==='1-5'?'Lun-Vie':dayVal==='6-0'?'Sab-Dom':dayVal==='all'?'todos los dias':DIAS_SEMANA[parseInt(dayVal)];
+  toast('✅ Tarea fija guardada — cada '+label);
 }
 
 // Auto-inject fixed tasks into Lo del día
@@ -1583,10 +1607,46 @@ function openAddRecurring(){document.getElementById("modal-title").textContent="
 function calSaveRec2(){var dow=parseInt((document.getElementById("rec-dow")||{}).value||"1"),time=((document.getElementById("rec-time")||{}).value||"").trim(),text=((document.getElementById("rec-text")||{}).value||"").trim();if(!text)return;calSaveRec(calLoadRec().concat([{id:"cr"+Date.now(),dow:dow,time:time,text:text}]));closeModal();renderCal();}
 function openAddMonthly(){document.getElementById("modal-title").textContent="Agregar tarea mensual";document.getElementById("modal-body").innerHTML="<select id='mon-day' style='width:100%;margin-bottom:8px'>"+Array.from({length:31},function(_,i){return "<option value='"+(i+1)+"'>Dia "+(i+1)+"</option>";}).join("")+"</select><input type='text' id='mon-time' style='width:100%;margin-bottom:8px' placeholder='10:00'/><input type='text' id='mon-text' style='width:100%' placeholder='Pagar IVA'/>";document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-gold' onclick='saveMonthly()'>Guardar</button>";document.getElementById("modal-bg").classList.add("open");}
 function saveMonthly(){var day=parseInt((document.getElementById("mon-day")||{}).value||"1"),time=((document.getElementById("mon-time")||{}).value||"").trim(),text=((document.getElementById("mon-text")||{}).value||"").trim();if(!text)return;calSaveMonthly(calLoadMonthly().concat([{id:"m"+Date.now(),day:day,time:time,text:text}]));closeModal();renderMonthlyList();renderCal();}
-function renderResumen(){var today=todayKey(),pct=0;var sessions=ls("h6_sessions")||[];var todayGym=sessions.filter(function(s){return s&&s.date===today;});var depEl=document.getElementById("res-deporte");if(depEl)depEl.innerHTML=todayGym.length?todayGym.map(function(s){return "<span style='display:inline-flex;align-items:center;gap:4px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:6px;padding:4px 10px;font-size:12px;color:#34d399;margin-right:5px'>"+(s.dayName||"Entreno")+"</span>";}).join(""):("<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin entrenamiento hoy.</span>");if(todayGym.length)pct+=30;var intentions=ls("h1_intentions")||[];var todayInt=intentions.filter(function(i){return i&&i.date===today;});var intEl=document.getElementById("res-intencion");if(intEl)intEl.innerHTML=todayInt.length?todayInt.map(function(i){return "<div style='font-size:12px;padding:3px 0'>"+esc(i.text)+"</div>";}).join(""):("<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin intencion hoy.</span>");if(todayInt.length)pct+=20;var sn=document.getElementById("res-score-num");if(sn)sn.textContent=pct+"%";var sf=document.getElementById("res-score-fill");if(sf)sf.style.width=pct+"%";var sm=document.getElementById("res-score-msg");if(sm)sm.textContent=pct>=50?"Gran dia, Nano!":pct>=20?"Buen avance!":"El dia empieza ahora.";}
+function renderResumen(){var today=todayKey(),pct=0;var sessions=ls("h6_sessions")||[];var thisWeekStartR=getMonday(new Date()).toISOString().slice(0,10);var todayGym=sessions.filter(function(s){return s&&s.date>=thisWeekStartR;});var depEl=document.getElementById("res-deporte");if(depEl)depEl.innerHTML=todayGym.length?todayGym.map(function(s){return "<span style='display:inline-flex;align-items:center;gap:4px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:6px;padding:4px 10px;font-size:12px;color:#34d399;margin-right:5px'>"+(s.dayName||"Entreno")+"</span>";}).join(""):("<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin entrenamiento hoy.</span>");if(todayGym.length)pct+=30;var intentions=ls("h1_intentions")||[];var todayInt=intentions.filter(function(i){return i&&i.date===today;});var intEl=document.getElementById("res-intencion");if(intEl)intEl.innerHTML=todayInt.length?todayInt.map(function(i){return "<div style='font-size:12px;padding:3px 0'>"+esc(i.text)+"</div>";}).join(""):("<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin intencion hoy.</span>");if(todayInt.length)pct+=20;var sn=document.getElementById("res-score-num");if(sn)sn.textContent=pct+"%";var sf=document.getElementById("res-score-fill");if(sf)sf.style.width=pct+"%";var sm=document.getElementById("res-score-msg");if(sm)sm.textContent=pct>=50?"Gran dia, Nano!":pct>=20?"Buen avance!":"El dia empieza ahora.";}
 function openSettings(){var binId=ls("sync_bin_id")||"";document.getElementById("modal-title").textContent="Configurar Sync";var body="";if(binId){body+="<div style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#34d399'>Sync activado</div><div style='font-family:monospace;font-size:11px;color:#d4a843;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:6px;padding:8px;text-align:center;margin-bottom:10px;word-break:break-all'>"+binId+"</div><p style='font-size:11px;color:#6b7280'>Copia en el otro dispositivo para sincronizar.</p>";}else{body+="<p style='font-size:12px;font-weight:700;margin-bottom:5px'>Crear sync nuevo</p><button class='btn b-gold' id='btn-create-sync' style='width:100%;margin-bottom:12px;justify-content:center' onclick='createSyncBin()'>Activar sync automatico</button><p style='font-size:12px;font-weight:700;margin-bottom:5px'>Tengo un codigo</p><input type='text' id='existing-bin-id' style='width:100%;margin-bottom:8px;font-family:monospace' placeholder='Pega tu codigo aqui...'/><button class='btn b-indigo' style='width:100%;margin-bottom:12px;justify-content:center' onclick='connectExistingBin()'>Conectar</button>";}body+="<hr style='border-color:rgba(255,255,255,.1);margin:10px 0'/><div style='display:flex;gap:7px'><button class='btn b-ghost' onclick='exportLocal();closeModal()'>Exportar JSON</button><button class='btn b-ghost' onclick='importLocal()'>Importar JSON</button></div>";document.getElementById("modal-body").innerHTML=body;var footer="<button class='btn b-ghost' onclick='closeModal()'>Cerrar</button>";if(binId)footer+="<button class='btn b-red' onclick='disconnectSync()'>Desconectar</button>";document.getElementById("modal-footer").innerHTML=footer;document.getElementById("modal-bg").classList.add("open");}
-function createSyncBin(){var btn=document.getElementById("btn-create-sync");if(btn){btn.textContent="Creando...";btn.disabled=true;}fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(typeof getAllData==="function"?getAllData():{})}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(d){var bid=d.metadata&&d.metadata.id;if(!bid)throw new Error("Sin ID");ls("sync_bin_id",bid);closeModal();openSettings();toast("Sync activado!");}).catch(function(){toast("Error — exportando localmente");exportLocal();if(btn){btn.textContent="Activar sync automatico";btn.disabled=false;}});}
-function connectExistingBin(){var code=((document.getElementById("existing-bin-id")||{}).value||"").trim();if(!code){toast("Pega el codigo primero");return;}ls("sync_bin_id",code);closeModal();try{cloudLoad();}catch(e){}}
+function createSyncBin(){
+  var apiKey=((document.getElementById("sync-api-key")||{}).value||"").trim();
+  if(!apiKey){toast("Pega tu API Key primero");return;}
+  var btn=document.getElementById("btn-create-sync");
+  toast("Creando bin en JSONBin...");
+  fetch("https://api.jsonbin.io/v3/b",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","X-Master-Key":apiKey,"X-Bin-Name":"TIMON-Nano"},
+    body:JSON.stringify(getAllData())
+  })
+  .then(function(r){if(!r.ok)throw new Error("Error "+r.status);return r.json();})
+  .then(function(d){
+    var bid=d.metadata&&d.metadata.id;
+    if(!bid)throw new Error("Sin ID");
+    ls("sync_bin_id",bid);
+    ls("sync_cfg",{apiKey:apiKey});
+    closeModal();openSettings();
+    toast("Sync activado. Guarda el codigo que aparece.");
+  })
+  .catch(function(e){
+    toast("Error: "+e.message+" — verifica tu API Key en jsonbin.io");
+  });
+}
+
+function connectExistingBin(){
+  var code=((document.getElementById("existing-bin-id")||{}).value||"").trim();
+  if(!code){toast("Pega el codigo primero");return;}
+  var parts=code.split("|");
+  if(parts.length===2){
+    ls("sync_bin_id",parts[0].trim());
+    ls("sync_cfg",{apiKey:parts[1].trim()});
+    closeModal();toast("Sync conectado — probando conexion...");
+    try{cloudLoad();}catch(e){}
+  } else {
+    toast("Formato invalido. Debe ser: binId|apiKey");
+  }
+}
+
 function disconnectSync(){ls("sync_bin_id",null);closeModal();toast("Sync desconectado");}
 </script>
 </body>
