@@ -767,12 +767,19 @@ function loadH1Frase(force){
     var raw=ls('h1_fallback_idx');
     var idx=(raw===null||raw===undefined)?0:parseInt(raw);
     if(isNaN(idx))idx=0;
+    // Auto-advance on new day
+    var lastFraseDay=ls('h1_frase_day');
+    if(!force&&lastFraseDay!==todayKey()){
+      idx=(idx+1)%arr.length;
+      ls('h1_frase_day',todayKey());
+    }
     if(force)idx=(idx+1)%arr.length;
     ls('h1_fallback_idx',idx);
     el.textContent=arr[idx%arr.length];
   }catch(ex){el.textContent='Nano, hoy es un gran dia.';}
   el.classList.remove('loading');
 }
+
 
 
 function saveH1Intention(){
@@ -977,12 +984,12 @@ function h4RenderDay(){
   if(de){de.innerHTML=done.length?"<div style=\"font-size:10px;font-weight:700;color:#6b7280;margin:6px 0 4px\">Completadas — toca para desmarcar</div>"+done.map(function(t){return '<div class="h4-day-item" style="opacity:.55"><div class="h4-day-chk done" data-id="'+t.id+'" onclick="h4TogDayEl(this)">&#10003;</div><span class="h4-day-txt" style="text-decoration:line-through">'+esc(t.text)+'</span></div>';}).join(""):'';}
 }
 
-function h4TogDay(id){var t=h4LoadDay(h4Day);var x=t.find(function(i){return i.id===id;});if(x){x.done=!x.done;h4SaveDay(h4Day,t);}h4RenderDay();}
+function h4TogDay(id){var t=h4LoadDay(h4Day);var x=t.find(function(i){return i.id===id;});if(x){x.done=!x.done;h4SaveDay(h4Day,t);if(h4Day===todayKey())ls("h4_last_day",todayKey());}h4RenderDay();}
 function h4TogDayEl(el){h4TogDay(el.getAttribute('data-id'));}
 function h4DelDayEl(el){h4DelDay(el.getAttribute('data-id'));}
 
 function h4DelDay(id){h4SaveDay(h4Day,h4LoadDay(h4Day).filter(t=>t.id!==id));h4RenderDay();}
-function h4AddDay(){const inp=document.getElementById('h4-inp-day');const txt=inp.value.trim();if(!txt)return;const t=h4LoadDay(h4Day);t.push({id:'d'+Date.now(),text:txt,done:false});h4SaveDay(h4Day,t);inp.value='';h4RenderDay();toast('✅ Agregado');}
+function h4AddDay(){const inp=document.getElementById('h4-inp-day');const txt=inp.value.trim();if(!txt)return;const t=h4LoadDay(h4Day);t.push({id:'d'+Date.now(),text:txt,done:false});h4SaveDay(h4Day,t);if(h4Day===todayKey())ls('h4_last_day',todayKey());inp.value='';h4RenderDay();toast('✅ Agregado');}
 
 function h4LoadList(k){return ls('h4_'+k)||[];}
 function h4SaveList(k,arr){ls('h4_'+k,arr);}
@@ -1636,7 +1643,46 @@ function calSaveMonthly(a){ls("cal_monthly",a);}
 function calNav(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();}
 function renderCal(){var te=document.getElementById("cal-title");if(te)te.textContent=MESES_C[calMonth]+" "+calYear;var first=new Date(calYear,calMonth,1),last=new Date(calYear,calMonth+1,0);var off=(first.getDay()+6)%7,tot=last.getDate(),today=todayKey();var rec=calLoadRec(),evs=calLoadEvs(),monthly=calLoadMonthly();var grid=document.getElementById("cal-grid");if(!grid)return;while(grid.children.length>7)grid.removeChild(grid.lastChild);var pT=new Date(calYear,calMonth,0).getDate();for(var i=0;i<off;i++){var b=document.createElement("div");b.className="cal-cell cal-other";b.innerHTML="<div class='cal-num'>"+(pT-off+i+1)+"</div>";grid.appendChild(b);}for(var d=1;d<=tot;d++){var ds=calYear+"-"+String(calMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var dow=new Date(calYear,calMonth,d).getDay();var c=document.createElement("div");c.className="cal-cell"+(ds===today?" cal-today":"")+(ds===calSelectedDate?" cal-selected":"");c.onclick=(function(x){return function(){calSelectDay(x);};})(ds);var h="<div class='cal-num'>"+d+"</div>";rec.forEach(function(r){if(r.dow===dow)h+="<div class='cal-ev ev-rec'>"+(r.time?r.time+" ":"")+r.text.slice(0,13)+"</div>";});evs.filter(function(e){return e.date===ds;}).forEach(function(e){h+="<div class='cal-ev ev-one'>"+(e.time?e.time+" ":"")+e.text.slice(0,13)+"</div>";});monthly.forEach(function(m){if(m.day===d)h+="<div class='cal-ev' style='background:rgba(251,191,36,.18);color:#fbbf24'>"+(m.time?m.time+" ":"")+m.text.slice(0,13)+"</div>";});c.innerHTML=h;grid.appendChild(c);}var rem=(7-(off+tot)%7)%7;for(var r2=1;r2<=rem;r2++){var b2=document.createElement("div");b2.className="cal-cell cal-other";b2.innerHTML="<div class='cal-num'>"+r2+"</div>";grid.appendChild(b2);}renderRecListCal();renderMonthlyList();if(calSelectedDate)calShowDetail(calSelectedDate);}
 function calSelectDay(ds){calSelectedDate=ds;renderCal();calShowDetail(ds);}
-function calShowDetail(ds){var rec=calLoadRec(),evs=calLoadEvs(),monthly=calLoadMonthly();var d2=new Date(ds+"T12:00:00"),dow=d2.getDay(),dn=d2.getDate();var te=document.getElementById("detail-title");if(te)te.textContent=DOW_C[dow]+" "+dn+" "+MESES_C[d2.getMonth()];var de=document.getElementById("day-detail");if(de)de.style.display="block";var h="";rec.forEach(function(r){if(r.dow===dow)h+="<div class='ev-item'><span class='ev-time'>"+(r.time||"")+"</span><span class='ev-text'>"+esc(r.text)+"</span><span class='ev-tag'>Fijo</span></div>";});evs.filter(function(e){return e.date===ds;}).forEach(function(e){h+="<div class='ev-item ev-one'><span class='ev-time'>"+(e.time||"")+"</span><span class='ev-text'>"+esc(e.text)+"</span><button class='ev-del-btn' data-evid='"+e.id+"' onclick='calDelEvEl(this)'>x</button></div>";});monthly.filter(function(m){return m.day===dn;}).forEach(function(m){h+="<div class='ev-item' style='border-left-color:#fbbf24'><span class='ev-time'>"+(m.time||"")+"</span><span class='ev-text'>"+esc(m.text)+"</span><span class='ev-tag' style='color:#fbbf24'>Dia "+m.day+"</span></div>";});if(!h)h="<div style='color:#4b5563;font-size:12px;padding:8px'>Sin eventos.</div>";var ee=document.getElementById("detail-events");if(ee)ee.innerHTML=h;if(de)de.scrollIntoView({behavior:"smooth",block:"nearest"});}
+function calShowDetail(ds){
+  var rec=calLoadRec(),evs=calLoadEvs(),monthly=calLoadMonthly();
+  var d2=new Date(ds+"T12:00:00"),dow=d2.getDay(),dn=d2.getDate();
+  var te=document.getElementById("detail-title");
+  if(te)te.textContent=DOW_C[dow]+" "+dn+" "+MESES_C[d2.getMonth()];
+  var de=document.getElementById("day-detail");
+  if(de)de.style.display="block";
+  // Collect all events for this day
+  var allEvs=[];
+  rec.forEach(function(r){
+    if(r.dow===dow)allEvs.push({time:r.time||"",text:r.text,type:"rec",id:null});
+  });
+  evs.filter(function(e){return e.date===ds;}).forEach(function(e){
+    allEvs.push({time:e.time||"",text:e.text,type:"one",id:e.id});
+  });
+  monthly.filter(function(m){return m.day===dn;}).forEach(function(m){
+    allEvs.push({time:m.time||"",text:m.text,type:"monthly",id:m.id});
+  });
+  // Sort by time (empty time goes last)
+  allEvs.sort(function(a,b){
+    if(!a.time&&!b.time)return 0;
+    if(!a.time)return 1;
+    if(!b.time)return -1;
+    return a.time.localeCompare(b.time);
+  });
+  var h="";
+  allEvs.forEach(function(ev){
+    if(ev.type==="rec")
+      h+="<div class='ev-item'><span class='ev-time'>"+ev.time+"</span><span class='ev-text'>"+esc(ev.text)+"</span><span class='ev-tag'>Fijo</span></div>";
+    else if(ev.type==="one")
+      h+="<div class='ev-item ev-one'><span class='ev-time'>"+ev.time+"</span><span class='ev-text'>"+esc(ev.text)+"</span><button class='ev-del-btn' data-evid='"+ev.id+"' onclick='calDelEvEl(this)'>x</button></div>";
+    else
+      h+="<div class='ev-item' style='border-left-color:#fbbf24'><span class='ev-time'>"+ev.time+"</span><span class='ev-text'>"+esc(ev.text)+"</span><span class='ev-tag' style='color:#fbbf24'>Dia "+dn+"</span></div>";
+  });
+  if(!h)h="<div style='color:#4b5563;font-size:12px;padding:8px'>Sin eventos.</div>";
+  var ee=document.getElementById("detail-events");
+  if(ee)ee.innerHTML=h;
+  if(de)de.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 function calDelEvEl(el){var id=el.getAttribute("data-evid");calSaveEvs(calLoadEvs().filter(function(e){return e.id!==id;}));renderCal();}
 function renderRecListCal(){var rec=calLoadRec(),el=document.getElementById("rec-list-cal");if(!el)return;var h="";[1,2,3,4,5,6,0].forEach(function(dow){rec.filter(function(r){return r.dow===dow;}).forEach(function(r){h+="<div class='rec-row'><span class='rec-day-badge'>"+DOW_C[dow].slice(0,3)+"</span><span style='color:#fbbf24;font-weight:600;flex-shrink:0'>"+(r.time&&r.time!=="00:00"?r.time:"")+"</span><span style='flex:1'>"+esc(r.text)+"</span><button class='rec-del-btn' data-rid='"+r.id+"' onclick='calDelRecEl(this)'>x</button></div>";});});el.innerHTML=h||"<div style='color:#4b5563;font-size:11px'>Sin fijos.</div>";}
 function calDelRecEl(el){var id=el.getAttribute("data-rid");calSaveRec(calLoadRec().filter(function(r){return r.id!==id;}));renderCal();}
