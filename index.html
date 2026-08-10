@@ -822,7 +822,6 @@ function renderH1IntHist(){
 
 const H2_SEMANA=[
   {id:'mama',name:'Mamá',emoji:'👩',type:'Familia'},
-  {id:'nicolas',name:'Nicolás',emoji:'👨',type:'Familia'},
   {id:'suegra',name:'Suegra',emoji:'👩',type:'Familia'},
   {id:'linoska',name:'Linoska',emoji:'👩‍💼',type:'HM Arq'},
   {id:'barbara',name:'Bárbara',emoji:'👩‍💼',type:'HM Arq'},
@@ -843,6 +842,9 @@ const H2_LUNES=[...H2_SEMANA,
   {id:'cristobal',name:'Cristóbal Domper',emoji:'👤',type:'Amigos'},
   {id:'mandingas',name:'Grupo Mandingas',emoji:'👥',type:'Amigos'},
   {id:'miguelalex',name:'Grupo Miguel y Alex',emoji:'👥',type:'Amigos'},
+  {id:'sitomanboys',name:'Grupo Sitomanboys',emoji:'👥',type:'Amigos'},
+  {id:'primos',name:'Grupo Primos Bravo',emoji:'👨‍👩‍👧‍👦',type:'Familia'},
+  {id:'discrecion',name:'Grupo Discreción',emoji:'🌙',type:'Amigos'},
 ];
 let h2List='lunes';
 function h2SetList(l){h2List=l;document.querySelectorAll('.h2-tab').forEach((t,i)=>t.classList.toggle('active',['lunes','semana'][i]===l));renderH2();}
@@ -851,7 +853,7 @@ function renderH2(){
   const contacts=h2List==='lunes'?H2_LUNES:H2_SEMANA;
   document.getElementById('h2-contacts').innerHTML=contacts.map(c=>{
     var s=ls('h2_'+c.id)||{g1:'',g2:'',g3:''};
-    if(typeof NANO_SALUDOS!=='undefined'&&NANO_SALUDOS[c.id]){var _ns2=NANO_SALUDOS[c.id];s={g1:_ns2[0],g2:_ns2[1],g3:_ns2[2]};try{ls('h2_'+c.id,s);}catch(e){}}else if(!s.g1&&!s.g2&&!s.g3){var _n2=c.name.split(' ')[0];s={g1:'Hola '+_n2+'! Como estas? Buen dia!',g2:'Buenos dias '+_n2+'!',g3:'Hola '+_n2+'! Que tengas un gran dia.'};try{ls('h2_'+c.id,s);}catch(e){}}
+    if(typeof NANO_SALUDOS!=='undefined'&&NANO_SALUDOS[c.id]){var _nso=NANO_SALUDOS[c.id];var _dow=new Date().getDay();var _isLun=h2List==='lunes'||_dow===1;var _ns2=_isLun?_nso.l:_nso.d;s={g1:_ns2[0],g2:_ns2[1],g3:_ns2[2]};ls('h2_'+c.id,s);}else if(!s.g1&&!s.g2&&!s.g3){var _n2=c.name.split(' ')[0];s={g1:'Hola '+_n2+'! Como estas? Buen dia!',g2:'Buenos dias '+_n2+'!',g3:'Hola '+_n2+'! Que tengas un gran dia.'};try{ls('h2_'+c.id,s);}catch(e){}}
     return`<div class="contact-card" id="cc-${c.id}">
       <div class="c-hdr"><div class="c-avatar">${c.emoji}</div><span class="c-name">${esc(c.name)}</span><span class="c-type">${c.type}</span></div>
       <div class="greetings-list">
@@ -867,7 +869,7 @@ function renderH2(){
 function h2Save(id){ls('h2_'+id,{g1:document.getElementById('h2g1-'+id)?.value||'',g2:document.getElementById('h2g2-'+id)?.value||'',g3:document.getElementById('h2g3-'+id)?.value||''});}
 function h2Clear(id){ls('h2_'+id,{g1:'',g2:'',g3:''});[1,2,3].forEach(n=>{const e=document.getElementById('h2g'+n+'-'+id);if(e)e.value='';});}
 function h2Gen(id,name){
-  var ns=typeof NANO_SALUDOS!=='undefined'&&NANO_SALUDOS[id]?NANO_SALUDOS[id]:null;
+  var _nso2=typeof NANO_SALUDOS!=='undefined'?NANO_SALUDOS[id]:null;var _dow2=new Date().getDay();var _isLun2=h2List==='lunes'||_dow2===1;var ns=_nso2?(_isLun2?_nso2.l:_nso2.d):null;
   var idx2=ls('h2_idx_'+id)||0;var nxt2=(idx2+1)%(ns?ns.length:2);ls('h2_idx_'+id,nxt2);
   var n2=name.split(' ')[0];
   var tmpl2;
@@ -1939,27 +1941,30 @@ function renderHistorial(){
 
 
 var NANO_SALUDOS={
-  'mama':['Hola mamita linda, que tengas una tremenda semana!','Hola mamita, como estás? Que tengas un lindo día','Hola maita hermosa, como va todo?'],
-  'nicolas':['Hola bro, que tengas una gran semana!','Hola hermanito, como estás? Que tengas un gran día','Hola nicooooo, como va todo mi bro?'],
-  'suegra':['Hola suegrita linda, que tenga una gran semana!','Hola suegrita bella, como está? Que tenga un lindo día','Hola suegrita hermosa, como se ha sentido?'],
-  'linoska':['Hola Lino, que tengas una gran semana! Arrancamos!','Hola Lino, como estás? Que tengas un gran día','Hola Lino, buen día. Que tengas un gran día!'],
-  'barbara':['Hola Bárbara, que tengas una gran semana! Arrancamos!','Hola Bárbara, como estás? Que tengas un gran día','Hola Bárbara, buen día. Que tengas un gran día!'],
-  'daniel':['Hola Daniel, que tengas una gran semana! Arrancamos!','Hola Daniel, como estás? Que tengas un gran día','Hola Daniel, buen día. Que tengas un gran día!'],
-  'alex_':['Hola Alex, que tengas una gran semana! Arrancamos!','Hola Alex, como estás? Que tengas un gran día','Hola Alex, buen día. Que tengas un gran día!'],
-  'andres':['Hola Andriuuuu, que tengas una gran semana! Arrancamos!','Hola Andriuu, como estás? Que tengas un gran día','Wena Andriu, buen día. Que tengas un gran día!'],
-  'ivan':['Hola Ivan, que tengas una gran semana! Arrancamos!','Hola Ivan, como estás? Que tengas un gran día','Hola Ivan, buen día. Que tengas un gran día!'],
-  'kathy_rodri':['Muy buenos días Kathy y Rodri, que tengan una gran semana!','Hola Kathy y Rodri, como están? Que tengan un gran día','Buenos días Kathy y Rodri, que tengan un gran día!'],
-  'saire_caro':['Muy buenos días Saire y Caro, que tengan una gran semana!','Hola Saire y Caro, como están? Que tengan un gran día','Buenos días Saire y Caro, que tengan un gran día!'],
-  'pato':['Hola Patooo, que tengas una gran semana!','Hola Pato, como estás? Que tengas un gran día','Wena Pato, buen día. Que tengas un gran día!'],
-  'carlosg':['Hola Carloncho, que tengas una gran semana!','Hola Carloncho, como estás? Que tengas un gran día','Wena Carloncho, buen día. Que tengas un gran día!'],
-  'locutores':['Muy buenos días locutores, que tengan una gran semana!','Hola locutores, como están? Que tengan un gran día','Buenos días locutores, que tengan un gran día!'],
-  'profesores':['Muy buenos días profes, que tengan una gran semana!','Hola profes, como están? Que tengan un gran día','Buenos días profes, que tengan un gran día!'],
-  'cote':['Hola Cotecilla, que tengas una gran semana!','Hola Cotecilla, como estás? Que tengas un gran día','Wena Cotecilla, buen día. Que tengas un gran día!'],
-  'felipe':['Hola Felipin, que tengas una gran semana! Jugamos hoy?','Hola Felipin, como estás? Que tengas un gran día, jugamos hoy?','Wena Felipin, buen día! Jugamos hoy?'],
-  'cristobal':['Hola Cris, que tengas una gran semana!','Hola Cris, como estás? Que tengas un gran día','Wena Criiis, buen día. Que tengas un gran día!'],
-  'mandingas':['Muy buenos días mandingaaas, que tengan una gran semana!','Hola mandingas, como están? Que tengan un gran día','Buenos días mandingas, que tengan un gran día!'],
-  'miguelalex':['Muy buenos días Miguel y Alex, que tengan una gran semana!','Hola cabros, como están? Que tengan un gran día','Buenos días Alex y Miguel, que tengan un gran día!']
+  'mama':{l:['Hola mamita linda, que tengas una tremenda semana!','Hola mamita hermosa, que tengas una gran semana!','Hola mamita, buena semana para ti!'],d:['Hola mamita linda, que tengas un lindo día!','Hola mamita hermosa, que tengas un gran día!','Hola mamita, buen día para ti!']},
+  'suegra':{l:['Hola suegrita linda, que tenga una gran semana!','Hola suegrita bella, buena semana para usted!','Hola suegrita hermosa, que le vaya genial esta semana!'],d:['Hola suegrita linda, que tenga un lindo día!','Hola suegrita bella, buen día para usted!','Hola suegrita hermosa, que le vaya muy bien hoy!']},
+  'linoska':{l:['Hola Lino, que tengas una gran semana! Arrancamos!','Hola Lino, buena semana! A darle con todo!','Hola Lino, que sea una tremenda semana!'],d:['Hola Lino, que tengas un gran día!','Hola Lino, buen día! A darle con todo!','Hola Lino, que sea un tremendo día!']},
+  'barbara':{l:['Hola Bárbara, que tengas una gran semana! Arrancamos!','Hola Bárbara, buena semana! A darle con todo!','Hola Bárbara, que sea una tremenda semana!'],d:['Hola Bárbara, que tengas un gran día!','Hola Bárbara, buen día! A darle con todo!','Hola Bárbara, que sea un tremendo día!']},
+  'daniel':{l:['Hola Daniel, que tengas una gran semana! Arrancamos!','Hola Daniel, buena semana! A darle con todo!','Hola Daniel, que sea una tremenda semana!'],d:['Hola Daniel, que tengas un gran día!','Hola Daniel, buen día! A darle con todo!','Hola Daniel, que sea un tremendo día!']},
+  'alex_':{l:['Hola Alex, que tengas una gran semana! Arrancamos!','Hola Alex, buena semana! A darle con todo!','Hola Alex, que sea una tremenda semana!'],d:['Hola Alex, que tengas un gran día!','Hola Alex, buen día! A darle con todo!','Hola Alex, que sea un tremendo día!']},
+  'andres':{l:['Hola Andriuuuu, que tengas una gran semana! Arrancamos!','Hola Andriuu, buena semana! A darle con todo!','Wena Andriu, que sea una tremenda semana!'],d:['Hola Andriuuuu, que tengas un gran día!','Hola Andriuu, buen día! A darle con todo!','Wena Andriu, que sea un tremendo día!']},
+  'ivan':{l:['Hola Ivan, que tengas una gran semana! Arrancamos!','Hola Ivan, buena semana! A darle con todo!','Hola Ivan, que sea una tremenda semana!'],d:['Hola Ivan, que tengas un gran día!','Hola Ivan, buen día! A darle con todo!','Hola Ivan, que sea un tremendo día!']},
+  'kathy_rodri':{l:['Hola Kathy y Rodri, que tengan una gran semana!','Muy buenos días, buena semana para los dos!','Que tengan una tremenda semana Kathy y Rodri!'],d:['Hola Kathy y Rodri, que tengan un gran día!','Muy buenos días, buen día para los dos!','Que tengan un tremendo día Kathy y Rodri!']},
+  'saire_caro':{l:['Hola Saire y Caro, que tengan una gran semana!','Muy buenos días, buena semana para las dos!','Que tengan una tremenda semana Saire y Caro!'],d:['Hola Saire y Caro, que tengan un gran día!','Muy buenos días, buen día para las dos!','Que tengan un tremendo día Saire y Caro!']},
+  'pato':{l:['Hola Patooo, que tengas una gran semana!','Hola Pato estrella, buena semana!','Wena Patooo, que sea una tremenda semana!'],d:['Hola Patooo, que tengas un gran día!','Hola Pato estrella, buen día!','Wena Patooo, que sea un tremendo día!']},
+  'carlosg':{l:['Hola Carloncho, que tengas una gran semana!','Hola Carlos, buena semana!','Wena Carloncho, que sea una tremenda semana!'],d:['Hola Carloncho, que tengas un gran día!','Hola Carlos, buen día!','Wena Carloncho, que sea un tremendo día!']},
+  'locutores':{l:['Hola locutores, que tengan una gran semana!','Buenos días a todos, buena semana!','Que tengan una tremenda semana locutores!'],d:['Hola locutores, que tengan un gran día!','Buenos días a todos, buen día!','Que tengan un tremendo día locutores!']},
+  'profesores':{l:['Hola profes, que tengan una gran semana!','Buenos días a todos, buena semana!','Que tengan una tremenda semana profes!'],d:['Hola profes, que tengan un gran día!','Buenos días a todos, buen día!','Que tengan un tremendo día profes!']},
+  'cote':{l:['Hola Cotecilla, que tengas una gran semana!','Hola Cote, buena semana!','Wena Cotecilla, que sea una tremenda semana!'],d:['Hola Cotecilla, que tengas un gran día!','Hola Cote, buen día!','Wena Cotecilla, que sea un tremendo día!']},
+  'felipe':{l:['Hola Felipin, que tengas una gran semana! Jugamos hoy?','Hola Felipe, buena semana! Jugamos?','Wena Felipin, que sea una tremenda semana! Jugamos hoy?'],d:['Hola Felipin, que tengas un gran día! Jugamos hoy?','Hola Felipe, buen día! Jugamos?','Wena Felipin, que sea un tremendo día! Jugamos hoy?']},
+  'cristobal':{l:['Hola Cris, que tengas una gran semana!','Hola Cristóbal, buena semana!','Wena Criiis, que sea una tremenda semana!'],d:['Hola Cris, que tengas un gran día!','Hola Cristóbal, buen día!','Wena Criiis, que sea un tremendo día!']},
+  'mandingas':{l:['Hola mandingaaas, que tengan una gran semana!','Buenos días mandingas, buena semana para todos!','Que tengan una tremenda semana mandingas!'],d:['Hola mandingaaas, que tengan un gran día!','Buenos días mandingas, buen día para todos!','Que tengan un tremendo día mandingas!']},
+  'miguelalex':{l:['Hola Miguel y Alex, que tengan una gran semana!','Buenos días cabros, buena semana!','Que tengan una tremenda semana!'],d:['Hola Miguel y Alex, que tengan un gran día!','Buenos días cabros, buen día!','Que tengan un tremendo día!']},
+  'sitomanboys':{l:['Hola Sitomanboys, que tengan una gran semana!','Buenos días chicos, buena semana a todos!','Que tengan una tremenda semana Sitomanboys!'],d:['Hola Sitomanboys, que tengan un gran día!','Buenos días chicos, buen día a todos!','Que tengan un tremendo día Sitomanboys!']},
+  'primos':{l:['Hola primitos, feliz inicio de semana! Que les vaya genial!','Hola primos, buena semana para todos!','Hola queridos primos, que tengan una tremenda semana!'],d:['Hola primitos, que tengan un gran día!','Hola primos, buen día para todos!','Hola queridos primos, que tengan un tremendo día!']},
+  'discrecion':{l:['Muy buenos días QQHH, que tengan una gran semana!','Muy buenos días QQHH, tremenda semana para todos!','Muy buenos días QQHH, buen inicio de semana!'],d:['Muy buenos días QQHH, que tengan un gran día!','Muy buenos días QQHH, que les vaya genial hoy!','Muy buenos días QQHH, que tengan un tremendo día!']}
 };
+
 
 
 </script>
