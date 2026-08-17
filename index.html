@@ -1367,7 +1367,7 @@ function h4RenderList(k,cls){
       return '<div class="hist-item" style="display:flex;align-items:center;gap:6px"><span class="hist-date">'+e.date+'</span>'
         +(e.emp?'<span class="emp-tag" style="background:'+EMP_COLORS[e.emp||'']+'20;color:'+EMP_COLORS[e.emp||'']+'">'+EMP_NAMES[e.emp||'']+'</span> ':'')
         +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim);flex:1">'+esc(e.text)+'</span>'
-        +'<button onclick="h4Undo(''+k+'','+i+')" style="flex-shrink:0;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);border-radius:5px;color:#fbbf24;font-size:10px;padding:2px 7px;cursor:pointer" title="Recuperar tarea">↩</button>'
+        +'<button data-k="'+k+'" data-i="'+i+'" onclick="h4Undo(this.dataset.k,parseInt(this.dataset.i))" style="flex-shrink:0;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);border-radius:5px;color:#fbbf24;font-size:10px;padding:2px 7px;cursor:pointer" title="Recuperar tarea">&#x21A9;</button>'
         +'</div>';
     }).join(''):'<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
   }
