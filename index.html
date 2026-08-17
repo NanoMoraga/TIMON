@@ -1363,10 +1363,12 @@ function h4RenderList(k,cls){
   }).join('')||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">—</div>';
   var dEl=document.getElementById('h4-done-'+k);
   if(dEl){
-    dEl.innerHTML=done.length?done.slice(0,20).map(function(e){
-      return '<div class="hist-item"><span class="hist-date">'+e.date+'</span>'
+    dEl.innerHTML=done.length?done.slice(0,20).map(function(e,i){
+      return '<div class="hist-item" style="display:flex;align-items:center;gap:6px"><span class="hist-date">'+e.date+'</span>'
         +(e.emp?'<span class="emp-tag" style="background:'+EMP_COLORS[e.emp||'']+'20;color:'+EMP_COLORS[e.emp||'']+'">'+EMP_NAMES[e.emp||'']+'</span> ':'')
-        +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim)">'+esc(e.text)+'</span></div>';
+        +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim);flex:1">'+esc(e.text)+'</span>'
+        +'<button onclick="h4Undo(''+k+'','+i+')" style="flex-shrink:0;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);border-radius:5px;color:#fbbf24;font-size:10px;padding:2px 7px;cursor:pointer" title="Recuperar tarea">↩</button>'
+        +'</div>';
     }).join(''):'<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
   }
 }
@@ -1383,6 +1385,19 @@ function h4Tog(k,id){
   h4SaveList(k,arr.filter(function(t){return t.id!==id;}));
   h4RenderList(k,h4Cls(k));
   toast('✅ Realizada — guardada en historial');
+}
+
+function h4Undo(k,idx){
+  var done=h4LoadDone(k);
+  if(idx<0||idx>=done.length)return;
+  var item=done[idx];
+  var arr=h4LoadList(k);
+  arr.unshift({id:h4nid++,text:item.text,emp:item.emp||'',done:false});
+  done.splice(idx,1);
+  h4SaveList(k,arr);
+  h4SaveDone(k,done);
+  h4RenderList(k,h4Cls(k));
+  toast('↩ Tarea recuperada');
 }
 
 // ═══ TAREAS FIJAS (RECURRENTES) ═══
