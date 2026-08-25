@@ -306,11 +306,9 @@ p,span,div,input,textarea,select,button,label{
       <button class="tab-btn active" onclick="showTab(1)">🙏 Gracias</button>
       <button class="tab-btn" onclick="showTab(2)">📅 Agenda</button>
       <button class="tab-btn" onclick="showTab(3)">💬 Saludos</button>
-      <button class="tab-btn" onclick="showTab(4)">🎯 Delegar</button>
-      <button class="tab-btn" onclick="showTab(5)">📋 Tareas</button>
-      <button class="tab-btn" onclick="showTab(6)">📣 Marketing</button>
-      <button class="tab-btn" onclick="showTab(7)">💪 Deporte</button>
-      <button class="tab-btn" onclick="showTab(8)">📊 Resumen</button>
+      <button class="tab-btn" onclick="showTab(4)">📋 Tareas</button>
+      <button class="tab-btn" onclick="showTab(5)">💪 Deporte</button>
+      <button class="tab-btn" onclick="showTab(6)">📊 Resumen</button>
     </div>
     <div class="sync-bar">
       <span class="sync-status" id="sync-status">Sin sync</span>
@@ -338,11 +336,9 @@ try{
   <button onclick="showTab(1)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">🙏<span>Gracias</span></button>
   <button onclick="showTab(2)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📅<span>Agenda</span></button>
   <button onclick="showTab(3)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">💬<span>Saludos</span></button>
-  <button onclick="showTab(4)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">🎯<span>Delegar</span></button>
-  <button onclick="showTab(5)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📋<span>Tareas</span></button>
-  <button onclick="showTab(6)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📣<span>Mktg</span></button>
-  <button onclick="showTab(7)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">💪<span>Deporte</span></button>
-  <button onclick="showTab(8)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📊<span>Resumen</span></button>
+  <button onclick="showTab(4)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📋<span>Tareas</span></button>
+  <button onclick="showTab(5)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">💪<span>Deporte</span></button>
+  <button onclick="showTab(6)" style="display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 14px;margin-right:7px;cursor:pointer;font-size:11px;color:#e2e8f0;min-width:64px;font-weight:500">📊<span>Resumen</span></button>
 </div>
 <div class="content">
 
@@ -359,6 +355,29 @@ try{
       <button class="btn b-gold" onclick="loadH1Frase(true)">↻ Nueva reflexión</button>
     </div>
   </div>
+  <div id="h1-logos-strip" style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;margin:18px 0 8px 0;"></div>
+<script>
+window.addEventListener('load',function(){
+  var order=['moragas','hm','nano','rock','wifis','inmo','lola'];
+  var names={moragas:'Moragas',hm:'HM Arq.',nano:'Nanohome',rock:'Rockstar',wifis:'Wifis',inmo:'Inmobiliaria',lola:'Lola FM'};
+  var strip=document.getElementById('h1-logos-strip');
+  if(!strip||typeof H3_LOGOS==='undefined') return;
+  order.forEach(function(k){
+    if(!H3_LOGOS[k]) return;
+    var wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;';
+    var img=document.createElement('img');
+    img.src=H3_LOGOS[k];
+    img.alt=names[k]||k;
+    img.style.cssText='width:52px;height:52px;object-fit:contain;border-radius:10px;background:#1f2937;padding:4px;border:1px solid rgba(255,255,255,.12);';
+    var lbl=document.createElement('span');
+    lbl.textContent=names[k]||k;
+    lbl.style.cssText='font-size:9px;color:#94a3b8;text-align:center;max-width:58px;line-height:1.2;';
+    wrap.appendChild(img);wrap.appendChild(lbl);
+    strip.appendChild(wrap);
+  });
+});
+</script>
   <div class="h1-pillars">
     <div class="pillar p1">
       <button class="pillar-edit" onclick="editPillar('familia')">✏️</button>
@@ -380,15 +399,12 @@ try{
     </div>
   </div>
   <div class="h1-intentions">
-    <label>✍️ Mi intención para hoy</label>
+    <label>🎯 Mis Metas</label>
     <div class="h1-int-row">
-      <textarea class="h1-int-input" id="h1-int-input" placeholder="¿Qué quiero lograr hoy que me haga sentir orgulloso al final del día?"></textarea>
-      <button class="btn b-gold" onclick="saveH1Intention()">+ Guardar</button>
+      <textarea class="h1-int-input" id="h1-meta-input" placeholder="Escribe una meta y presiona + Agregar…"></textarea>
+      <button class="btn b-gold" onclick="metaAdd()">+ Agregar</button>
     </div>
-  </div>
-  <div class="hist-panel">
-    <div class="hist-hdr" onclick="toggleHist('h1-int-hist')">📖 Registro de intenciones <span style="margin-left:auto">▼</span></div>
-    <div class="hist-body" id="h1-int-hist"></div>
+    <div id="h1-metas-list" style="margin-top:10px"></div>
   </div>
 </div>
 </div>
@@ -407,7 +423,7 @@ try{
 </div>
 
 <!-- H3 -->
-<div class="tab-panel" id="h3">
+<div class="tab-panel" id="h3" style="display:none">
 <div class="page-wrap">
   <div class="sec-title">Delegar</div>
   <div class="h3-nav">
@@ -470,7 +486,7 @@ try{
 </div>
 
 <!-- H5 -->
-<div class="tab-panel" id="h5">
+<div class="tab-panel" id="h5" style="display:none">
 <div class="page-wrap">
   <div class="sec-title">Marketing Semanal</div>
   <div class="sec-sub">Genera posts y prompts para ChatGPT — presencia constante en redes</div>
@@ -540,7 +556,7 @@ try{
 </div>
 
 <div class="tab-panel" id="h_agenda"><div class="page-wrap"><div class="sec-title">Agenda</div><div class="sec-sub">Calendario, eventos fijos y tareas recurrentes</div><div class="cal-wrap"><div class="cal-header"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-title-txt" id="cal-title"></span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button><button class="btn b-gold" onclick="openAddEvent()">+ Evento</button></div><div class="cal-grid" id="cal-grid"><div class="cal-day-hdr">Lun</div><div class="cal-day-hdr">Mar</div><div class="cal-day-hdr">Mie</div><div class="cal-day-hdr">Jue</div><div class="cal-day-hdr">Vie</div><div class="cal-day-hdr">Sab</div><div class="cal-day-hdr">Dom</div></div><div class="day-detail" id="day-detail" style="display:none"><div style="font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><span id="detail-title"></span><button class="btn b-ghost" style="font-size:11px;padding:3px 9px" onclick="document.getElementById('day-detail').style.display='none'">x</button></div><div id="detail-events"></div></div><div class="rec-panel"><div class="rec-panel-hdr">Fijos semanales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddRecurring()">+ Fijo</button></div><div id="rec-list-cal"></div></div><div class="rec-panel" style="margin-top:10px"><div class="rec-panel-hdr" style="color:#fbbf24">Fijos mensuales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddMonthly()">+ Mensual</button></div><div id="monthly-list-cal"></div></div></div></div></div>
-<div class="tab-panel" id="h8"><div class="page-wrap"><div class="sec-title">Mi dia</div><div style="max-width:700px;margin:0 auto"><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px"><div style="text-align:center"><div id="res-score-num" style="font-size:38px;font-weight:900;color:#d4a843">0%</div><div style="font-size:11px;color:#6b7280">productividad</div></div><div style="flex:1"><div style="height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;max-width:150px"><div id="res-score-fill" style="height:100%;background:linear-gradient(90deg,#d4a843,#f0c060);border-radius:99px;width:0%;transition:width .5s"></div></div><div id="res-score-msg" style="font-size:11px;color:#6b7280;margin-top:5px"></div></div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">Intencion</div><div id="res-intencion" style="font-size:12px;color:#9ca3af;font-style:italic">Sin intencion hoy.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fb923c;margin-bottom:7px">Tareas fijas realizadas</div><div id="res-fijas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas fijas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#818cf8;margin-bottom:7px">Tareas del dia</div><div id="res-tareas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">Urgentes / pendientes completadas</div><div id="res-urgentes" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#34d399;margin-bottom:7px">Deporte esta semana</div><div id="res-deporte" style="font-size:12px;color:#9ca3af;font-style:italic">Sin entrenamiento.</div></div><div style="text-align:center;margin-top:12px"><button class="btn b-ghost" onclick="renderResumen()">Actualizar</button></div><div style="margin-top:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#6b7280;margin-bottom:8px">Historial de dias</div><div style="position:relative;margin-bottom:10px"><input type="text" id="hist-search" placeholder="Buscar actividad... (ej: reunion, bateria, Nanohome)" style="width:100%;box-sizing:border-box;padding-left:28px;font-size:12px" oninput="renderHistorial()"/><span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:13px">&#128269;</span></div><div id="res-historial"></div></div></div></div></div>
+<div class="tab-panel" id="h8"><div class="page-wrap"><div class="sec-title">Mi dia</div><div style="max-width:700px;margin:0 auto"><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px"><div style="text-align:center"><div id="res-score-num" style="font-size:38px;font-weight:900;color:#d4a843">0%</div><div style="font-size:11px;color:#6b7280">productividad</div></div><div style="flex:1"><div style="height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;max-width:150px"><div id="res-score-fill" style="height:100%;background:linear-gradient(90deg,#d4a843,#f0c060);border-radius:99px;width:0%;transition:width .5s"></div></div><div id="res-score-msg" style="font-size:11px;color:#6b7280;margin-top:5px"></div></div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">🎯 Mis Metas</div><div id="res-intencion" style="font-size:12px;color:#9ca3af;font-style:italic">Sin metas registradas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fb923c;margin-bottom:7px">Tareas fijas realizadas</div><div id="res-fijas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas fijas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#818cf8;margin-bottom:7px">Tareas del dia</div><div id="res-tareas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">Urgentes / pendientes completadas</div><div id="res-urgentes" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#34d399;margin-bottom:7px">Deporte esta semana</div><div id="res-deporte" style="font-size:12px;color:#9ca3af;font-style:italic">Sin entrenamiento.</div></div><div style="text-align:center;margin-top:12px"><button class="btn b-ghost" onclick="renderResumen()">Actualizar</button></div><div style="margin-top:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#6b7280;margin-bottom:8px">Historial de dias</div><div style="position:relative;margin-bottom:10px"><input type="text" id="hist-search" placeholder="Buscar actividad... (ej: reunion, bateria, Nanohome)" style="width:100%;box-sizing:border-box;padding-left:28px;font-size:12px" oninput="renderHistorial()"/><span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:13px">&#128269;</span></div><div id="res-historial"></div></div></div></div></div>
 </div><!-- /content -->
 </div><!-- /shell -->
 
@@ -594,7 +610,7 @@ function toggleHist(id){const el=document.getElementById(id);if(el)el.classList.
 let currentTab=1;
 function showTab(n){
   try{currentTab=n;}catch(e){}
-  var pm={1:'h1',2:'h_agenda',3:'h2',4:'h3',5:'h4',6:'h5',7:'h6',8:'h8'};
+  var pm={1:'h1',2:'h_agenda',3:'h2',4:'h4',5:'h6',6:'h8'};
   try{
     var btns=document.querySelectorAll('.tab-btn');
     for(var i=0;i<btns.length;i++)btns[i].classList.toggle('active',i===n-1);
@@ -816,10 +832,51 @@ function renderH1IntHist(){
   el.innerHTML=list.slice(0,30).map(i=>`<div class="hist-item"><span class="hist-date">${i.date}<br>${i.time||''}</span><span class="hist-txt">${esc(i.text)}</span></div>`).join('');
 }
 
+// ══ METAS ══
+function metaAdd(){
+  var inp=document.getElementById('h1-meta-input');
+  var txt=(inp?inp.value:'').trim();if(!txt)return;
+  var metas=ls('h1_metas')||[];
+  metas.push({id:'m'+Date.now(),text:txt,done:false});
+  ls('h1_metas',metas);
+  if(inp)inp.value='';
+  renderMetas();toast('🎯 Meta agregada');
+}
+function metaToggle(id){
+  var metas=ls('h1_metas')||[];
+  var x=metas.find(function(m){return m.id===id;});
+  if(x)x.done=!x.done;
+  ls('h1_metas',metas);renderMetas();
+}
+function metaDel(id){
+  var metas=(ls('h1_metas')||[]).filter(function(m){return m.id!==id;});
+  ls('h1_metas',metas);renderMetas();
+}
+function metaEdit(id){
+  var metas=ls('h1_metas')||[];
+  var x=metas.find(function(m){return m.id===id;});if(!x)return;
+  var nuevo=prompt('Editar meta:',x.text);
+  if(nuevo&&nuevo.trim()){x.text=nuevo.trim();ls('h1_metas',metas);renderMetas();}
+}
+function renderMetas(){
+  var el=document.getElementById('h1-metas-list');if(!el)return;
+  var metas=ls('h1_metas')||[];
+  if(!metas.length){el.innerHTML='<div style="color:var(--dim);font-size:11px;padding:6px 0">Aún no tienes metas registradas.</div>';return;}
+  el.innerHTML=metas.map(function(m){
+    return '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:5px;border-left:3px solid '+(m.done?'var(--green)':'var(--gold)')+';">'
+      +'<div onclick="metaToggle(\''+m.id+'\')" style="width:16px;height:16px;border-radius:4px;border:2px solid '+(m.done?'var(--green)':'rgba(212,168,67,.5)')+';flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;background:'+(m.done?'rgba(52,211,153,.2)':'transparent')+'">'+(m.done?'✓':'')+'</div>'
+      +'<span style="flex:1;font-size:12px;'+(m.done?'text-decoration:line-through;color:var(--dim)':'')+'">'+(m.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span>'
+      +'<button onclick="metaEdit(\''+m.id+'\')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:2px 5px;" title="Editar">✏️</button>'
+      +'<button onclick="metaDel(\''+m.id+'\')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:2px 5px;" title="Eliminar">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
 // ══ H2 SALUDOS ══
 
 const H2_SEMANA=[
   {id:'mama',name:'Mamá',emoji:'👩',type:'Familia'},
+  {id:'nicolas',name:'Nicolás',emoji:'👨',type:'Familia'},
   {id:'suegra',name:'Suegra',emoji:'👩',type:'Familia'},
   {id:'linoska',name:'Linoska',emoji:'👩‍💼',type:'HM Arq'},
   {id:'barbara',name:'Bárbara',emoji:'👩‍💼',type:'HM Arq'},
@@ -843,6 +900,7 @@ const H2_LUNES=[...H2_SEMANA,
   {id:'sitomanboys',name:'Grupo Sitomanboys',emoji:'👥',type:'Amigos'},
   {id:'primos',name:'Grupo Primos Bravo',emoji:'👨‍👩‍👧‍👦',type:'Familia'},
   {id:'discrecion',name:'Grupo Discreción',emoji:'🌙',type:'Amigos'},
+  {id:'perrines',name:'Grupo Los Perrines',emoji:'🐶',type:'Amigos'},
 ];
 let h2List='lunes';
 function h2Key(id){return 'h2_'+(h2List==='lunes'?'l':'d')+'_'+id;}
@@ -1599,6 +1657,7 @@ window.addEventListener('load', function(){
   // Init cada sección de forma aislada — si una falla no rompe las demás
   setTimeout(function(){try{renderPillars();}catch(e){}},0);
   setTimeout(function(){try{renderH1IntHist();}catch(e){}},0);
+  setTimeout(function(){try{renderMetas();}catch(e){}},0);
   setTimeout(function(){try{loadH1Frase(false);}catch(e){}},100);
   setTimeout(function(){try{renderFixedTasks();}catch(e){}},50);
   setTimeout(function(){try{h4InjectFixed();}catch(e){}},50);
@@ -1719,8 +1778,8 @@ function renderMonthlyList(){var arr=calLoadMonthly(),el=document.getElementById
 function delMonthlyEl(el){var id=el.getAttribute("data-mid");calSaveMonthly(calLoadMonthly().filter(function(m){return m.id!==id;}));renderMonthlyList();renderCal();}
 function openAddEvent(){var dv=calSelectedDate||todayKey();document.getElementById("modal-title").textContent="Agregar evento";document.getElementById("modal-body").innerHTML="<input type='date' id='ev-date' style='width:100%;margin-bottom:8px' value='"+dv+"'/><input type='text' id='ev-time' style='width:100%;margin-bottom:8px' placeholder='Hora ej: 11:00'/><input type='text' id='ev-text' style='width:100%' placeholder='Descripcion'/>";document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-gold' onclick='calSaveEv()'>Guardar</button>";document.getElementById("modal-bg").classList.add("open");}
 function calSaveEv(){var date=(document.getElementById("ev-date")||{}).value||"",time=((document.getElementById("ev-time")||{}).value||"").trim(),text=((document.getElementById("ev-text")||{}).value||"").trim();if(!text||!date)return;calSaveEvs(calLoadEvs().concat([{id:"ev"+Date.now(),date:date,time:time,text:text}]));closeModal();renderCal();calSelectDay(date);}
-function openAddRecurring(){document.getElementById("modal-title").textContent="Agregar evento fijo";document.getElementById("modal-body").innerHTML="<select id='rec-dow' style='width:100%;margin-bottom:8px'><option value='1'>Lunes</option><option value='2'>Martes</option><option value='3' selected>Miercoles</option><option value='4'>Jueves</option><option value='5'>Viernes</option><option value='6'>Sabado</option><option value='0'>Domingo</option></select><input type='text' id='rec-time' style='width:100%;margin-bottom:8px' placeholder='11:00'/><input type='text' id='rec-text' style='width:100%' placeholder='Clase de bateria'/>";document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-indigo' onclick='calSaveRec2()'>Guardar</button>";document.getElementById("modal-bg").classList.add("open");}
-function calSaveRec2(){var dow=parseInt((document.getElementById("rec-dow")||{}).value||"1"),time=((document.getElementById("rec-time")||{}).value||"").trim(),text=((document.getElementById("rec-text")||{}).value||"").trim();if(!text)return;calSaveRec(calLoadRec().concat([{id:"cr"+Date.now(),dow:dow,time:time,text:text}]));closeModal();renderCal();}
+function openAddRecurring(){document.getElementById("modal-title").textContent="Agregar evento fijo";document.getElementById("modal-body").innerHTML="<label style='font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px'>¿Qué días?</label><select id='rec-dow' style='width:100%;margin-bottom:10px'><option value='week' selected>Lun a Vie (todos los días hábiles)</option><option value='week6'>Lun a Sáb</option><option value='1'>Solo Lunes</option><option value='2'>Solo Martes</option><option value='3'>Solo Miércoles</option><option value='4'>Solo Jueves</option><option value='5'>Solo Viernes</option><option value='6'>Solo Sábado</option><option value='0'>Solo Domingo</option></select><label style='font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px'>Hora</label><input type='text' id='rec-time' style='width:100%;margin-bottom:10px' placeholder='08:30'/><label style='font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px'>Descripción</label><input type='text' id='rec-text' style='width:100%' placeholder='Gimnasio'/>";document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-indigo' onclick='calSaveRec2()'>Guardar</button>";document.getElementById("modal-bg").classList.add("open");}
+function calSaveRec2(){var dowVal=(document.getElementById("rec-dow")||{}).value||"week",time=((document.getElementById("rec-time")||{}).value||"").trim(),text=((document.getElementById("rec-text")||{}).value||"").trim();if(!text)return;var recs=calLoadRec();var days=dowVal==='week'?[1,2,3,4,5]:dowVal==='week6'?[1,2,3,4,5,6]:[parseInt(dowVal)];var now=Date.now();days.forEach(function(d,i){recs.push({id:"cr"+(now+i),dow:d,time:time,text:text});});calSaveRec(recs);closeModal();renderCal();toast('✅ Rutina guardada para '+days.length+' día'+(days.length>1?'s':''));}
 function openAddMonthly(){document.getElementById("modal-title").textContent="Agregar tarea mensual";document.getElementById("modal-body").innerHTML="<select id='mon-day' style='width:100%;margin-bottom:8px'>"+Array.from({length:31},function(_,i){return "<option value='"+(i+1)+"'>Dia "+(i+1)+"</option>";}).join("")+"</select><input type='text' id='mon-time' style='width:100%;margin-bottom:8px' placeholder='10:00'/><input type='text' id='mon-text' style='width:100%' placeholder='Pagar IVA'/>";document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-gold' onclick='saveMonthly()'>Guardar</button>";document.getElementById("modal-bg").classList.add("open");}
 function saveMonthly(){var day=parseInt((document.getElementById("mon-day")||{}).value||"1"),time=((document.getElementById("mon-time")||{}).value||"").trim(),text=((document.getElementById("mon-text")||{}).value||"").trim();if(!text)return;calSaveMonthly(calLoadMonthly().concat([{id:"m"+Date.now(),day:day,time:time,text:text}]));closeModal();renderMonthlyList();renderCal();}
 function renderResumen(){
@@ -1739,16 +1798,15 @@ function renderResumen(){
       +"</div>";}).join("")
     :"<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin entrenamientos esta semana.</span>";
 
-  // ── Intención de hoy
-  var intentions=ls("h1_intentions")||ls('h1_intentions')||[];
-  var todayInt=intentions.filter(function(i){return i&&i.date===today;});
+  // ── Metas
+  var metas=ls("h1_metas")||[];
   var intEl=document.getElementById("res-intencion");
-  if(intEl)intEl.innerHTML=todayInt.length
-    ?todayInt.map(function(i){return "<div style='font-size:12px;padding:4px 0;color:var(--text-primary)'>"+esc(i.text)+"</div>";}).join("")
-    :"<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin intención registrada hoy.</span>";
+  if(intEl)intEl.innerHTML=metas.length
+    ?metas.map(function(m){return "<div style='display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0'><span style='color:"+(m.done?'var(--green)':'var(--gold)')+"'>"+(m.done?'✓':'○')+"</span><span style='"+(m.done?'text-decoration:line-through;color:#4b5563':'')+"'>"+esc(m.text)+"</span></div>";}).join("")
+    :"<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin metas registradas.</span>";
 
   // ── Tareas del día completadas
-  var dayTasks=ls("h4_day")||[];
+  var dayTasks=ls("h4_day_"+today)||[];
   var doneTasks=dayTasks.filter(function(t){return t.done;});
   var taskEl=document.getElementById("res-tareas");
   if(taskEl)taskEl.innerHTML=doneTasks.length
@@ -1758,6 +1816,9 @@ function renderResumen(){
       +"</div>";}).join("")
     :"<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin tareas completadas hoy.</span>";
 
+  // ── Score — declarar ANTES de usarlo
+  var pct=0;
+
   // ── Tareas fijas completadas hoy
   var fixedDone=h4FixedGetDone();
   var fixedTasks=h4LoadFixed();
@@ -1765,7 +1826,6 @@ function renderResumen(){
     var k=t.text+(t.time||'')+(t.emp||'');
     return !!fixedDone[k];
   });
-  // deduplicate by text
   var fixedDoneUniq={};
   fixedDoneItems.forEach(function(t){fixedDoneUniq[t.text]=true;});
   var fixedEl=document.getElementById("res-fijas");
@@ -1788,10 +1848,10 @@ function renderResumen(){
       +"</div>";}).join("")
     :"<span style='color:#4b5563;font-size:12px;font-style:italic'>Sin tareas completadas hoy.</span>";
 
-  // ── Score
-  var pct=0;
+  // ── Sumar al score
   if(todayGym.length)pct+=25;
-  if(todayInt.length)pct+=15;
+  var metasDone=(ls("h1_metas")||[]).filter(function(m){return m.done;}).length;
+  if(metasDone)pct+=Math.min(15,metasDone*5);
   if(doneTasks.length)pct+=Math.min(30,doneTasks.length*10);
   if(allDone.length)pct+=Math.min(30,allDone.length*10);
   pct=Math.min(100,pct);
@@ -1981,7 +2041,9 @@ var NANO_SALUDOS={
   'miguelalex':{l:['Hola Miguel y Alex, que tengan una gran semana!','Buenos días cabros, buena semana!','Que tengan una tremenda semana!','Hola cabros, arrancamos la semana con todo!','Buenos días Miguel y Alex, semana increíble para los dos!','Que la semana les resulte genial cabros!'],d:['Hola Miguel y Alex, que tengan un gran día!','Buenos días cabros, buen día!','Que tengan un tremendo día!','Hola cabros, con energía para hoy!','Buenos días Miguel y Alex, que el día resulte genial!','Que les vaya genial hoy cabros!']},
   'sitomanboys':{l:['Hola Sitomanboys, que tengan una gran semana!','Buenos días chicos, buena semana a todos!','Que tengan una tremenda semana Sitomanboys!','Hola Sitomanboys, arrancamos la semana con todo!','Buenos días equipo, semana increíble para el grupo!','Que la semana les resulte genial Sitomanboys!'],d:['Hola Sitomanboys, que tengan un gran día!','Buenos días chicos, buen día a todos!','Que tengan un tremendo día Sitomanboys!','Hola Sitomanboys, con energía para hoy!','Buenos días equipo, que el día resulte genial!','Que les vaya increíble hoy Sitomanboys!']},
   'primos':{l:['Hola primitos, feliz inicio de semana! Que les vaya genial!','Hola primos, buena semana para todos!','Hola queridos primos, que tengan una tremenda semana!','Hola primitos, arrancamos la semana! Que les vaya genial!','Buenos días primos, semana increíble para todos!','Hola familia, que la semana les traiga puros momentos lindos!'],d:['Hola primitos, que tengan un gran día!','Hola primos, buen día para todos!','Hola queridos primos, que tengan un tremendo día!','Hola primitos, que el día les vaya genial!','Buenos días primos, que el día traiga puros buenos momentos!','Hola familia, que les vaya increíble hoy!']},
-  'discrecion':{l:['Muy buenos días QQHH, que tengan una gran semana!','Muy buenos días QQHH, tremenda semana para todos!','Muy buenos días QQHH, buen inicio de semana!','Muy buenos días QQHH, que la semana sea espectacular para todos!','Muy buenos días QQHH, arrancamos con energía esta semana!','Muy buenos días QQHH, que les vaya excelente esta semana!'],d:['Muy buenos días QQHH, que tengan un gran día!','Muy buenos días QQHH, que les vaya genial hoy!','Muy buenos días QQHH, que tengan un tremendo día!','Muy buenos días QQHH, que el día sea espectacular para todos!','Muy buenos días QQHH, con energía para hoy!','Muy buenos días QQHH, que les vaya excelente hoy!']}
+  'nicolas':{l:['Hola bro, que tengas una gran semana!','Wena bro, buena semana pa ti!','Hola Nico, que sea una tremenda semana cabro!','Wena hermanoooo, arrancamos la semana con todo!','Hola bro, semana increíble para ti!','Wena Nico, que la semana te resulte genial!'],d:['Hola bro, que tengas un gran día!','Wena bro, buen día pa ti!','Hola Nico, que sea un tremendo día cabro!','Wena hermanoooo, a darle con fuerza hoy!','Hola bro, que el día te resulte genial!','Wena Nico, todo bien para hoy?']},
+  'discrecion':{l:['Muy buenos días QQHH, que tengan una gran semana!','Muy buenos días QQHH, tremenda semana para todos!','Muy buenos días QQHH, buen inicio de semana!','Muy buenos días QQHH, que la semana sea espectacular para todos!','Muy buenos días QQHH, arrancamos con energía esta semana!','Muy buenos días QQHH, que les vaya excelente esta semana!'],d:['Muy buenos días QQHH, que tengan un gran día!','Muy buenos días QQHH, que les vaya genial hoy!','Muy buenos días QQHH, que tengan un tremendo día!','Muy buenos días QQHH, que el día sea espectacular para todos!','Muy buenos días QQHH, con energía para hoy!','Muy buenos días QQHH, que les vaya excelente hoy!']},
+  'perrines':{l:['Hola perrines, que tengan una gran semana!','Buenos días perrines, buena semana para todos!','Que tengan una tremenda semana perrines!','Hola perrines, arrancamos la semana con energía!','Buenos días, semana increíble para el grupo!','Que la semana les traiga puros buenos momentos perrines!'],d:['Hola perrines, que tengan un gran día!','Buenos días perrines, buen día para todos!','Que tengan un tremendo día perrines!','Hola perrines, con energía para hoy!','Buenos días, que el día resulte genial!','Que les vaya increíble hoy perrines!']}
 };
 
 
