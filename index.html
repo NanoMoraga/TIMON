@@ -555,7 +555,7 @@ window.addEventListener('load',function(){
 </div>
 </div>
 
-<div class="tab-panel" id="h_agenda"><div class="page-wrap"><div class="sec-title">Agenda</div><div class="sec-sub">Calendario, eventos fijos y tareas recurrentes</div><div class="cal-wrap"><div class="cal-header"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-title-txt" id="cal-title"></span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button><button class="btn b-gold" onclick="openAddEvent()">+ Evento</button></div><div class="cal-grid" id="cal-grid"><div class="cal-day-hdr">Lun</div><div class="cal-day-hdr">Mar</div><div class="cal-day-hdr">Mie</div><div class="cal-day-hdr">Jue</div><div class="cal-day-hdr">Vie</div><div class="cal-day-hdr">Sab</div><div class="cal-day-hdr">Dom</div></div><div class="day-detail" id="day-detail" style="display:none"><div style="font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><span id="detail-title"></span><button class="btn b-ghost" style="font-size:11px;padding:3px 9px" onclick="document.getElementById('day-detail').style.display='none'">x</button></div><div id="detail-events"></div></div><div class="rec-panel"><div class="rec-panel-hdr">Fijos semanales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddRecurring()">+ Fijo</button></div><div id="rec-list-cal"></div></div><div class="rec-panel" style="margin-top:10px"><div class="rec-panel-hdr" style="color:#fbbf24">Fijos mensuales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddMonthly()">+ Mensual</button></div><div id="monthly-list-cal"></div></div></div></div></div>
+<div class="tab-panel" id="h_agenda"><div class="page-wrap"><div class="sec-title">Agenda</div><div class="sec-sub">Calendario, eventos fijos y tareas recurrentes</div><div class="cal-wrap"><div class="cal-header"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-title-txt" id="cal-title"></span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button><button class="btn b-gold" onclick="openAddEvent()">+ Evento</button></div><div class="cal-grid" id="cal-grid"><div class="cal-day-hdr">Lun</div><div class="cal-day-hdr">Mar</div><div class="cal-day-hdr">Mie</div><div class="cal-day-hdr">Jue</div><div class="cal-day-hdr">Vie</div><div class="cal-day-hdr">Sab</div><div class="cal-day-hdr">Dom</div></div><div class="day-detail" id="day-detail" style="display:none"><div style="font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><span id="detail-title"></span><button class="btn b-ghost" style="font-size:11px;padding:3px 9px" onclick="document.getElementById('day-detail').style.display='none'">x</button></div><div id="detail-events"></div></div><div class="rec-panel"><div class="rec-panel-hdr">Rutina<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddRecurring()">+ Fijo</button></div><div id="rec-list-cal"></div></div><div class="rec-panel" style="margin-top:10px"><div class="rec-panel-hdr" style="color:#fbbf24">Fijos mensuales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddMonthly()">+ Mensual</button></div><div id="monthly-list-cal"></div></div></div></div></div>
 <div class="tab-panel" id="h8"><div class="page-wrap"><div class="sec-title">Mi dia</div><div style="max-width:700px;margin:0 auto"><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px"><div style="text-align:center"><div id="res-score-num" style="font-size:38px;font-weight:900;color:#d4a843">0%</div><div style="font-size:11px;color:#6b7280">productividad</div></div><div style="flex:1"><div style="height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;max-width:150px"><div id="res-score-fill" style="height:100%;background:linear-gradient(90deg,#d4a843,#f0c060);border-radius:99px;width:0%;transition:width .5s"></div></div><div id="res-score-msg" style="font-size:11px;color:#6b7280;margin-top:5px"></div></div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">🎯 Mis Metas</div><div id="res-intencion" style="font-size:12px;color:#9ca3af;font-style:italic">Sin metas registradas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fb923c;margin-bottom:7px">Tareas fijas realizadas</div><div id="res-fijas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas fijas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#818cf8;margin-bottom:7px">Tareas del dia</div><div id="res-tareas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">Urgentes / pendientes completadas</div><div id="res-urgentes" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#34d399;margin-bottom:7px">Deporte esta semana</div><div id="res-deporte" style="font-size:12px;color:#9ca3af;font-style:italic">Sin entrenamiento.</div></div><div style="text-align:center;margin-top:12px"><button class="btn b-ghost" onclick="renderResumen()">Actualizar</button></div><div style="margin-top:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#6b7280;margin-bottom:8px">Historial de dias</div><div style="position:relative;margin-bottom:10px"><input type="text" id="hist-search" placeholder="Buscar actividad... (ej: reunion, bateria, Nanohome)" style="width:100%;box-sizing:border-box;padding-left:28px;font-size:12px" oninput="renderHistorial()"/><span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:13px">&#128269;</span></div><div id="res-historial"></div></div></div></div></div>
 </div><!-- /content -->
 </div><!-- /shell -->
@@ -1804,7 +1804,58 @@ function calShowDetail(ds){
 }
 
 function calDelEvEl(el){var id=el.getAttribute("data-evid");calSaveEvs(calLoadEvs().filter(function(e){return e.id!==id;}));renderCal();}
-function renderRecListCal(){var rec=calLoadRec(),el=document.getElementById("rec-list-cal");if(!el)return;var h="";[1,2,3,4,5,6,0].forEach(function(dow){rec.filter(function(r){return r.dow===dow;}).forEach(function(r){h+="<div class='rec-row'><span class='rec-day-badge'>"+DOW_C[dow].slice(0,3)+"</span><span style='color:#fbbf24;font-weight:600;flex-shrink:0'>"+(r.time&&r.time!=="00:00"?r.time:"")+"</span><span style='flex:1'>"+esc(r.text)+"</span><button class='rec-del-btn' data-rid='"+r.id+"' onclick='calDelRecEl(this)'>x</button></div>";});});el.innerHTML=h||"<div style='color:#4b5563;font-size:11px'>Sin fijos.</div>";}
+function renderRecListCal(){
+  var rec=calLoadRec(),el=document.getElementById("rec-list-cal");
+  if(!el)return;
+  var DOW_LETTER={0:'D',1:'L',2:'M',3:'M',4:'J',5:'V',6:'S'};
+  // Group by text (same task = same text, regardless of time)
+  var groups={};
+  rec.forEach(function(r){
+    var key=r.text||'';
+    if(!groups[key])groups[key]={time:r.time||'',text:r.text||'',days:[]};
+    if(groups[key].days.indexOf(r.dow)<0)groups[key].days.push(r.dow);
+    // Use earliest time if different
+    if(r.time&&(!groups[key].time||r.time<groups[key].time))groups[key].time=r.time;
+  });
+  var sorted=Object.values(groups).sort(function(a,b){return (a.time||'').localeCompare(b.time||'');});
+  var h='';
+  sorted.forEach(function(g){
+    var dayOrder=[1,2,3,4,5,6,0];
+    var badges=dayOrder.filter(function(d){return g.days.indexOf(d)>=0;})
+      .map(function(d){return "<span style='font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;background:rgba(129,140,248,.18);color:#818cf8'>"+DOW_LETTER[d]+"</span>";}).join('');
+    h+="<div class='rec-row'>";
+    if(g.time&&g.time!=='00:00')h+="<span style='color:#fbbf24;font-weight:600;flex-shrink:0;min-width:38px'>"+esc(g.time)+"</span>";
+    h+="<span style='flex:1'>"+esc(g.text)+"</span>";
+    h+="<span style='display:flex;gap:2px;flex-shrink:0;margin-right:4px'>"+badges+"</span>";
+    h+="<button style='background:none;border:none;color:#6b7280;font-size:12px;cursor:pointer;padding:0 4px;flex-shrink:0' data-rtext='"+esc(g.text)+"' data-rtime='"+esc(g.time)+"' onclick='calEditRecEl(this)' title='Editar'>✏️</button>";
+    h+="<button class='rec-del-btn' data-rtext='"+esc(g.text)+"' onclick='calDelRecGroup(this)'>x</button>";
+    h+="</div>";
+  });
+  el.innerHTML=h||"<div style='color:#4b5563;font-size:11px'>Sin rutina. Agrega con + Fijo.</div>";
+}
+function calDelRecGroup(el){
+  var txt=el.getAttribute('data-rtext')||'';
+  calSaveRec(calLoadRec().filter(function(r){return r.text!==txt;}));
+  renderCal();
+}
+function calEditRecEl(el){
+  var oldText=el.getAttribute('data-rtext')||'';
+  var oldTime=el.getAttribute('data-rtime')||'';
+  document.getElementById("modal-title").textContent="Editar fijo";
+  document.getElementById("modal-body").innerHTML="<label style='font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px'>Hora</label><input type='text' id='rec-edit-time' style='width:100%;margin-bottom:10px' value='"+esc(oldTime)+"' placeholder='08:30'/><label style='font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px'>Descripción</label><input type='text' id='rec-edit-text' style='width:100%' value='"+esc(oldText)+"'/><div style='margin-top:10px;font-size:11px;color:#6b7280'>⚠️ Se actualizarán <strong>todos los días</strong> que tengan este mismo texto.</div>";
+  document.getElementById("modal-footer").innerHTML="<button class='btn b-ghost' onclick='closeModal()'>Cancelar</button><button class='btn b-gold' onclick='calSaveRecEdit(\""+esc(oldText)+"\",\""+esc(oldTime)+"\")'>Guardar en todos los días</button>";
+  document.getElementById("modal-bg").classList.add("open");
+}
+function calSaveRecEdit(oldText,oldTime){
+  var newText=((document.getElementById('rec-edit-text')||{}).value||'').trim();
+  var newTime=((document.getElementById('rec-edit-time')||{}).value||'').trim();
+  if(!newText)return;
+  var recs=calLoadRec();
+  var count=0;
+  recs.forEach(function(r){if(r.text===oldText){r.text=newText;r.time=newTime;count++;}});
+  calSaveRec(recs);closeModal();renderCal();
+  toast('✅ Actualizado en '+count+' día'+(count!==1?'s':''));
+}
 function calDelRecEl(el){var id=el.getAttribute("data-rid");calSaveRec(calLoadRec().filter(function(r){return r.id!==id;}));renderCal();}
 function renderMonthlyList(){var arr=calLoadMonthly(),el=document.getElementById("monthly-list-cal");if(!el)return;var h="";arr.sort(function(a,b){return a.day-b.day;}).forEach(function(m){h+="<div class='monthly-row'><span class='monthly-day-badge'>Dia "+m.day+"</span>"+(m.time?"<span style='color:#fbbf24;font-weight:600;margin-right:5px'>"+m.time+"</span>":"")+"<span style='flex:1'>"+esc(m.text)+"</span><button class='monthly-del-btn' data-mid='"+m.id+"' onclick='delMonthlyEl(this)'>x</button></div>";});el.innerHTML=h||"<div style='color:#4b5563;font-size:11px'>Sin tareas mensuales.</div>";}
 function delMonthlyEl(el){var id=el.getAttribute("data-mid");calSaveMonthly(calLoadMonthly().filter(function(m){return m.id!==id;}));renderMonthlyList();renderCal();}
