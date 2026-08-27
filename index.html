@@ -622,11 +622,9 @@ function showTab(n){
   }catch(e){}
   try{if(n===2)renderCal();}catch(e){}
   try{if(n===3)renderH2();}catch(e){}
-  try{if(n===4)renderH3();}catch(e){}
-  try{if(n===5){h4Day=todayKey();h4RenderAll();}}catch(e){}
-  try{if(n===6){renderH5();try{inmoInit();}catch(e){}}}catch(e){}
-  try{if(n===7)renderH6();}catch(e){}
-  try{if(n===8)renderResumen();}catch(e){}
+  try{if(n===4){h4Day=todayKey();h4RenderAll();}}catch(e){}
+  try{if(n===5)renderH6();}catch(e){}
+  try{if(n===6)renderResumen();}catch(e){}
   try{var b=document.querySelectorAll('.tab-btn')[n-1];if(b)b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(e){}
 }
 
