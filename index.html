@@ -1064,7 +1064,12 @@ function h4RenderDay(){
   var past=h4Day<todayKey();
   if(lbl){if(h4Day===todayKey()){lbl.textContent="Hoy";lbl.className="h4-nlabel today";}else{lbl.textContent=new Date(h4Day+"T12:00:00").toLocaleDateString("es-CL",{day:"numeric",month:"short"});lbl.className="h4-nlabel past";}}
   if(btn)btn.disabled=h4Day>=todayKey();
-  if(el){el.innerHTML=pend.map(function(t){return '<div class="h4-day-item"><div class="h4-day-chk" data-id="'+t.id+'" onclick="h4TogDayEl(this)"></div><span class="h4-day-txt">'+esc(t.text)+'</span>'+(past?'':"<button class=\"h4-rm\" data-id=\""+t.id+"\" onclick=\"h4DelDayEl(this)\">x</button>")+'</div>';}).join("")||'<div style="color:#4b5563;font-size:12px;text-align:center;padding:10px">Sin tareas. Agrega con +</div>';}
+  if(el){el.innerHTML=pend.map(function(t,idx){
+    var ms='flex-shrink:0;background:none;border:none;color:#4b5563;font-size:11px;cursor:pointer;padding:0 2px;line-height:1;';
+    var up='<button style="'+ms+'opacity:'+(idx===0?'0.2':'0.8')+'" data-id="'+t.id+'" onclick="h4MoveDayEl(this,-1)">▲</button>';
+    var dn='<button style="'+ms+'opacity:'+(idx===pend.length-1?'0.2':'0.8')+'" data-id="'+t.id+'" onclick="h4MoveDayEl(this,1)">▼</button>';
+    return '<div class="h4-day-item"><div style="display:flex;flex-direction:column;margin-right:3px;">'+(past?'':up+dn)+'</div><div class="h4-day-chk" data-id="'+t.id+'" onclick="h4TogDayEl(this)"></div><span class="h4-day-txt">'+esc(t.text)+'</span>'+(past?'':"<button class=\"h4-rm\" data-id=\""+t.id+"\" onclick=\"h4DelDayEl(this)\">x</button>")+'</div>';
+  }).join("")||'<div style="color:#4b5563;font-size:12px;text-align:center;padding:10px">Sin tareas. Agrega con +</div>';}
   if(de){de.innerHTML=done.length?"<div style=\"font-size:10px;font-weight:700;color:#6b7280;margin:6px 0 4px\">Completadas — toca para desmarcar</div>"+done.map(function(t){return '<div class="h4-day-item" style="opacity:.55"><div class="h4-day-chk done" data-id="'+t.id+'" onclick="h4TogDayEl(this)">&#10003;</div><span class="h4-day-txt" style="text-decoration:line-through">'+esc(t.text)+'</span></div>';}).join(""):'';}
 }
 
@@ -1073,6 +1078,19 @@ function h4TogDayEl(el){h4TogDay(el.getAttribute('data-id'));}
 function h4DelDayEl(el){h4DelDay(el.getAttribute('data-id'));}
 
 function h4DelDay(id){h4SaveDay(h4Day,h4LoadDay(h4Day).filter(t=>t.id!==id));h4RenderDay();}
+function h4MoveDayEl(el,dir){
+  var id=el.getAttribute('data-id');
+  var tasks=h4LoadDay(h4Day);
+  var pend=tasks.filter(function(t){return !t.done;});
+  var done=tasks.filter(function(t){return t.done;});
+  var idx=pend.findIndex(function(t){return t.id===id;});
+  if(idx<0)return;
+  var to=idx+dir;
+  if(to<0||to>=pend.length)return;
+  var tmp=pend[idx];pend[idx]=pend[to];pend[to]=tmp;
+  h4SaveDay(h4Day,pend.concat(done));
+  h4RenderDay();
+}
 function h4AddDay(){const inp=document.getElementById('h4-inp-day');const txt=inp.value.trim();if(!txt)return;const t=h4LoadDay(h4Day);t.push({id:'d'+Date.now(),text:txt,done:false});h4SaveDay(h4Day,t);if(h4Day===todayKey())ls('h4_last_day',todayKey());inp.value='';h4RenderDay();toast('✅ Agregado');}
 
 function h4LoadList(k){return ls('h4_'+k)||[];}
@@ -1401,6 +1419,18 @@ function h4Add(k){
   toast('✅ Agregado');
 }
 
+function h4Move(k,id,dir){
+  id=parseInt(id);
+  var arr=h4LoadList(k);
+  var idx=arr.findIndex(function(t){return t.id===id;});
+  if(idx<0)return;
+  var to=idx+dir;
+  if(to<0||to>=arr.length)return;
+  var tmp=arr[idx];arr[idx]=arr[to];arr[to]=tmp;
+  h4SaveList(k,arr);
+  h4RenderList(k,h4Cls(k));
+}
+
 // Override h4RenderList to show empresa tag
 function h4RenderList(k,cls){
   var arr=h4LoadList(k);
@@ -1409,8 +1439,12 @@ function h4RenderList(k,cls){
   if(cntEl)cntEl.textContent=arr.length;
   var el=document.getElementById('h4-list-'+k);
   if(!el)return;
-  el.innerHTML=arr.map(function(t){
+  el.innerHTML=arr.map(function(t,idx){
+    var moveStyle='flex-shrink:0;background:none;border:none;color:var(--muted,#6b7280);font-size:12px;cursor:pointer;padding:0 2px;line-height:1;';
+    var upBtn='<button style="'+moveStyle+'opacity:'+(idx===0?'0.2':'0.8')+'" data-k="'+k+'" data-id="'+t.id+'" onclick="h4Move(this.dataset.k,this.dataset.id,-1)" title="Subir">▲</button>';
+    var dnBtn='<button style="'+moveStyle+'opacity:'+(idx===arr.length-1?'0.2':'0.8')+'" data-k="'+k+'" data-id="'+t.id+'" onclick="h4Move(this.dataset.k,this.dataset.id,1)" title="Bajar">▼</button>';
     return '<div class="h4-item '+cls+'">'
+      +'<div style="display:flex;flex-direction:column;margin-right:4px;">'+upBtn+dnBtn+'</div>'
       +(t.emp?empTag(t.emp):'')
       +'<div class="h4-chk" data-k="'+k+'" data-id="'+t.id+'" onclick="h4ChkItem(this)"></div>'
       +'<span class="h4-txt">'+(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
