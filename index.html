@@ -541,8 +541,8 @@ window.addEventListener('load',function(){
 
   <!-- HISTORIAL -->
   <div class="hist-panel" style="margin-top:16px;">
-    <div class="hist-hdr" onclick="toggleHist('h6-hist-body')">📖 Historial de entrenamientos <span style="margin-left:auto">▼</span></div>
-    <div class="hist-body" id="h6-hist-body"></div>
+    <div class="hist-hdr" onclick="toggleHist('h6-hist-body')">📅 Calendario de entrenamientos <span style="margin-left:auto">▼</span></div>
+    <div class="hist-body open" id="h6-hist-body"></div>
   </div>
 
   <!-- PROGRESIÓN IA -->
@@ -1350,17 +1350,79 @@ function h6Uncomplete(did){
 }
 
 function renderH6Hist(){
-  const sessions=h6LoadSessions();
-  const el=document.getElementById('h6-hist-body');if(!el)return;
-  if(!sessions.length){el.innerHTML='<div style="color:var(--dim);font-size:11px;padding:8px 0">Sin entrenamientos registrados aún. ¡A mover el esqueleto, Nano!</div>';return;}
-  el.innerHTML=sessions.slice(0,40).map(s=>`<div class="hist-item">
-    <span class="hist-date">${s.date}<br>${s.time||''}</span>
-    <span class="hist-txt"><strong style="color:var(--green)">${s.dayName}</strong><br>
-    ${Object.entries(s.weights||{}).filter(([,v])=>v&&v!=='').map(([k,v])=>{
-      const ex=Object.values(WORKOUT).flatMap(d=>d.exercises).find(e=>e.id===k);
-      return ex?`${ex.name}: ${v}`:'';
-    }).filter(Boolean).join(' · ')}</span>
-  </div>`).join('');
+  var sessions=h6LoadSessions();
+  var el=document.getElementById('h6-hist-body');if(!el)return;
+  if(!sessions.length){el.innerHTML='<div style="color:var(--dim);font-size:11px;padding:8px 0">Sin entrenamientos aún. ¡A mover el esqueleto, Nano!</div>';return;}
+  // Build lookup date → workouts
+  var byDate={};
+  sessions.forEach(function(s){if(!byDate[s.date])byDate[s.date]=[];byDate[s.date].push(s.dayName);});
+  var today=new Date();var todayStr=today.toISOString().slice(0,10);
+  var MNAMES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var html='<div style="font-size:10px;color:#6b7280;margin-bottom:10px">Toca un día entrenado para ver el detalle</div>';
+  for(var mo=2;mo>=0;mo--){
+    var d=new Date(today.getFullYear(),today.getMonth()-mo,1);
+    var yr=d.getFullYear(),mn=d.getMonth();
+    var dim=new Date(yr,mn+1,0).getDate();
+    var firstDow=(new Date(yr,mn,1).getDay()+6)%7;
+    html+='<div style="margin-bottom:16px">';
+    html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px">'+MNAMES[mn]+' '+yr+'</div>';
+    html+='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">';
+    ['L','M','M','J','V','S','D'].forEach(function(lbl){html+='<div style="text-align:center;font-size:8px;color:#4b5563;font-weight:700;padding-bottom:3px">'+lbl+'</div>';});
+    for(var i=0;i<firstDow;i++)html+='<div></div>';
+    for(var day=1;day<=dim;day++){
+      var ds=yr+'-'+String(mn+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      var worked=byDate[ds];var isFuture=ds>todayStr;var isToday=ds===todayStr;
+      if(worked){
+        html+='<div onclick="h6ShowDayDetail(\''+ds+'\')" style="text-align:center;padding:3px 1px;border-radius:5px;cursor:pointer;background:rgba(52,211,153,.18);border:1px solid rgba(52,211,153,.5);">';
+        html+='<div style="font-size:9px;color:#34d399;font-weight:700">'+day+'</div>';
+        html+='<div style="font-size:9px;color:#34d399;line-height:1">✓</div></div>';
+      } else if(isFuture){
+        html+='<div style="text-align:center;padding:3px 1px;border-radius:5px;opacity:.15"><div style="font-size:9px;color:#6b7280">'+day+'</div></div>';
+      } else {
+        var todayBorder=isToday?'border:1px solid #d4a843;':'border:1px solid transparent;';
+        html+='<div onclick="h6AddDaySession(\''+ds+'\')" style="text-align:center;padding:3px 1px;border-radius:5px;cursor:pointer;'+todayBorder+'" title="Agregar entreno">';
+        html+='<div style="font-size:9px;color:#374151">'+day+'</div>';
+        html+='<div style="font-size:8px;color:#374151;line-height:1">+</div></div>';
+      }
+    }
+    html+='</div></div>';
+  }
+  el.innerHTML=html;
+}
+function h6ShowDayDetail(ds){
+  var sessions=h6LoadSessions().filter(function(s){return s.date===ds;});
+  if(!sessions.length)return;
+  var allEx=[];Object.values(WORKOUT).forEach(function(d){d.exercises.forEach(function(e){allEx.push(e);});});
+  var txt=sessions.map(function(s){
+    var exs=Object.entries(s.weights||{}).filter(function(e){return e[1]&&e[1]!=='';}).map(function(e){
+      var ex=allEx.find(function(x){return x.id===e[0];});return ex?ex.name+': '+e[1]:'';
+    }).filter(Boolean).join(' · ');
+    return '<strong style="color:#34d399">'+esc(s.dayName)+'</strong><br><span style="font-size:11px;color:#9ca3af">'+(exs||'Sin detalle registrado')+'</span>';
+  }).join('<hr style="border-color:rgba(255,255,255,.1);margin:8px 0">');
+  document.getElementById('modal-title').textContent='Entreno '+ds;
+  document.getElementById('modal-body').innerHTML='<div style="font-size:12px;line-height:1.8">'+txt+'</div>';
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cerrar</button><button class="btn" style="background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);color:#f87171" onclick="h6DelDaySession(\''+ds+'\')">🗑 Eliminar día</button>';
+  document.getElementById('modal-bg').classList.add('open');
+}
+function h6DelDaySession(ds){
+  ls('h6_sessions',(ls('h6_sessions')||[]).filter(function(s){return s.date!==ds;}));
+  closeModal();renderH6();toast('🗑 Entreno eliminado');
+}
+function h6AddDaySession(ds){
+  var opts=Object.entries(WORKOUT).map(function(e){return '<option value="'+e[0]+'">'+e[1].emoji+' '+e[1].name+'</option>';}).join('');
+  document.getElementById('modal-title').textContent='Agregar entreno — '+ds;
+  document.getElementById('modal-body').innerHTML='<label style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;display:block;margin-bottom:4px">Tipo de entreno</label><select id="h6-add-type" style="width:100%">'+opts+'</select><div style="margin-top:10px;font-size:11px;color:#6b7280">Se guardará sin detalle de pesos.</div>';
+  document.getElementById('modal-footer').innerHTML='<button class="btn b-ghost" onclick="closeModal()">Cancelar</button><button class="btn b-gold" onclick="h6SaveManualSession(\''+ds+'\')">✓ Marcar como hecho</button>';
+  document.getElementById('modal-bg').classList.add('open');
+}
+function h6SaveManualSession(ds){
+  var type=(document.getElementById('h6-add-type')||{}).value||'lun';
+  var w=WORKOUT[type];if(!w)return;
+  var sessions=h6LoadSessions();
+  sessions.unshift({date:ds,time:'',dayName:w.name,weights:{}});
+  sessions.sort(function(a,b){return b.date.localeCompare(a.date);});
+  ls('h6_sessions',sessions.slice(0,365));
+  closeModal();renderH6();toast('✓ Entreno agregado para '+ds);
 }
 
 function h6Analyze(){
