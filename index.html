@@ -117,6 +117,39 @@ input::placeholder,textarea::placeholder{color:var(--dim);}
 .h1-int-input{flex:1;padding:8px 12px;border-radius:8px;resize:none;height:52px;font-size:12px;}
 @media(max-width:700px){.h1-pillars{grid-template-columns:1fr;}.h1-name{font-size:30px;}}
 
+/* ═══ MANIFIESTO ═══ */
+.h1-manifesto{margin-top:10px;}
+.man-nano-quote{background:linear-gradient(135deg,rgba(212,168,67,0.10),rgba(212,168,67,0.03));border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 20px;margin-bottom:16px;font-size:13px;font-style:italic;color:#f0e6c8;line-height:1.7;}
+.man-nano-quote strong{display:block;margin-top:8px;font-size:11px;color:var(--gold);font-style:normal;letter-spacing:.5px;}
+.man-nunca{background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.2);border-radius:14px;padding:16px 20px;margin-bottom:12px;}
+.man-nunca-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#f472b6;margin-bottom:12px;}
+.man-nunca-item{display:flex;gap:10px;margin-bottom:10px;font-size:12px;line-height:1.55;color:var(--text);}
+.man-nunca-item strong{color:#f472b6;min-width:70px;flex-shrink:0;}
+.man-block{border-radius:12px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(255,255,255,.07);}
+.man-block-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;user-select:none;}
+.man-block-hdr .man-chev{font-size:10px;opacity:.6;transition:transform .2s;}
+.man-block-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s;}
+.man-block-body.open{max-height:2000px;padding:4px 16px 16px;}
+.man-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;line-height:1.55;color:var(--text);}
+.man-item:last-child{border-bottom:none;}
+.man-item-num{font-weight:800;min-width:22px;flex-shrink:0;font-size:11px;}
+.man-item-body strong{display:block;margin-bottom:2px;}
+.man-rutina-blk{margin-bottom:12px;}
+.man-rutina-blk h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;margin:0 0 5px 0;display:flex;align-items:center;gap:6px;}
+.man-rutina-blk p{font-size:12px;line-height:1.6;color:var(--muted);margin:0;}
+.man-rutina-highlight{background:rgba(129,140,248,0.1);border-left:3px solid var(--indigo);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:13px;font-weight:700;color:var(--indigo);letter-spacing:.3px;text-align:center;}
+.man-rutina-ruta{background:rgba(52,211,153,0.06);border-radius:10px;padding:12px 14px;margin:8px 0;font-size:12px;color:var(--text);line-height:1.8;}
+.man-rutina-ruta span{color:#34d399;font-weight:700;margin-right:4px;}
+.man-4imp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+.man-imp-card{border-radius:10px;padding:12px 14px;}
+.man-imp-card h4{font-size:11px;font-weight:800;margin:0 0 6px 0;}
+.man-imp-card p{font-size:11px;line-height:1.55;margin:0;color:var(--muted);}
+.man-final{background:linear-gradient(135deg,rgba(248,113,113,0.1),rgba(212,168,67,0.1));border:1px solid rgba(212,168,67,0.25);border-radius:14px;padding:20px 22px;margin-top:16px;text-align:center;}
+.man-final h3{font-size:14px;font-weight:800;color:var(--gold);margin:0 0 10px 0;text-transform:uppercase;letter-spacing:.5px;}
+.man-final p{font-size:13px;line-height:1.7;color:var(--text);margin:0 0 8px 0;}
+.man-final .man-firme{font-size:16px;font-weight:900;color:#f87171;margin-top:12px;letter-spacing:.5px;}
+@media(max-width:600px){.man-4imp{grid-template-columns:1fr;}}
+
 /* ═══ H2 SALUDOS ═══ */
 .h2-tabs{display:flex;gap:8px;margin-bottom:18px;}
 .h2-tab{padding:5px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);}
@@ -255,6 +288,12 @@ input::placeholder,textarea::placeholder{color:var(--dim);}
 .fixed-task-item{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(129,140,248,0.05);border-left:2px solid var(--indigo);border-radius:6px;margin-bottom:4px;font-size:11px;}
 .fixed-task-day{font-size:9px;background:rgba(129,140,248,0.15);color:var(--indigo);border-radius:4px;padding:1px 5px;flex-shrink:0;}
 .fixed-task-time{font-size:10px;color:var(--amber);flex-shrink:0;}
+.fixed-cat-header{display:flex;align-items:center;gap:6px;padding:5px 4px 3px 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;cursor:pointer;user-select:none;margin-top:8px;border-radius:5px;}
+.fixed-cat-header:first-child{margin-top:0;}
+.fixed-cat-count{font-size:9px;border-radius:999px;padding:1px 6px;font-weight:700;}
+.fixed-cat-chevron{margin-left:auto;font-size:9px;opacity:.6;transition:transform .2s;}
+.fixed-cat-body{}
+.fixed-cat-done-bar{height:3px;border-radius:2px;margin:2px 4px 4px 4px;opacity:.4;transition:width .3s;}
 /* COPIAR EN DELEGAR */
 .copy-task-btn{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);border-radius:6px;color:var(--green);font-size:11px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:all .15s;}
 .copy-task-btn:hover{background:rgba(52,211,153,0.2);}
@@ -378,6 +417,156 @@ window.addEventListener('load',function(){
   });
 });
 </script>
+  <!-- MANIFIESTO DIARIO -->
+  <div class="h1-manifesto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">📖 Manifiesto Diario</span>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <span id="man-tts-timer" style="font-size:10px;color:var(--muted);min-width:36px;text-align:right;"></span>
+        <button onclick="manTTS.skip(-15)" title="-15s" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-size:13px;padding:5px 8px;cursor:pointer;line-height:1;">⏪</button>
+        <button id="man-tts-play" onclick="manTTSToggle()" title="Play/Pausa" style="background:rgba(212,168,67,0.18);border:1px solid rgba(212,168,67,0.4);border-radius:8px;color:#fbbf24;font-size:14px;font-weight:700;padding:5px 10px;cursor:pointer;line-height:1;">▶</button>
+        <button onclick="manTTS.skip(15)" title="+15s" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-size:13px;padding:5px 8px;cursor:pointer;line-height:1;">⏩</button>
+        <button onclick="manTTS.stop()" title="Detener" style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);border-radius:8px;color:#f87171;font-size:13px;padding:5px 8px;cursor:pointer;line-height:1;">⏹</button>
+      </div>
+    </div>
+
+    <!-- Quote + Nunca olvidar -->
+    <div class="man-nano-quote">
+      "Ordena tu rutina de tal manera que sea grata realizarla, sin apuro, pero diariamente significará montañas de avance. Solo planificando esto es que cada día será productivo y podrás seguir viviendo la raja como ahora mismo estás viviendo."
+      <strong>— Nano</strong>
+    </div>
+
+    <div class="man-nunca">
+      <div class="man-nunca-title">❤️ Lo que nunca debes olvidar</div>
+      <div class="man-nunca-item"><strong>Mamá</strong> Visítala todos los días. No estará para siempre. Son muy parecidos y se entienden como nadie. Ese tiempo no tiene precio.</div>
+      <div class="man-nunca-item"><strong>Andrea</strong> Aviva la llama. Cada viernes, un panorama rico y distinto. No dejes que la rutina apague lo que construyeron juntos.</div>
+      <div class="man-nunca-item"><strong>Guitarra &amp; Batería</strong> Date el tiempo. No porque sea productivo, sino porque te encanta. Y eso importa.</div>
+      <div class="man-nunca-item"><strong>Maite</strong> Es el momento. Ayúdala a construir algo que le dé independencia económica y que entienda que el nivel de pensamiento que adoptes hoy determina la vida que vas a vivir mañana.</div>
+      <div class="man-nunca-item"><strong>Familia</strong> Esta conexión no estará siempre disponible todos los días bajo el mismo techo. Estarlo es un privilegio. Vívelo.</div>
+    </div>
+
+    <!-- 1. 12 PILARES -->
+    <div class="man-block" style="border-color:rgba(212,168,67,0.25)">
+      <div class="man-block-hdr" style="background:rgba(212,168,67,0.08);color:#fbbf24" onclick="manToggle(this)">
+        <span>🏛️ Los 12 Pilares del Éxito — Jim Rohn</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">1.</span><div class="man-item-body"><strong>Desarrollo Personal</strong>Trabaja más en ti mismo que en tu negocio. Tu crecimiento interior determina el techo de todo lo demás.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">2.</span><div class="man-item-body"><strong>Carácter</strong>Lo que haces cuando nadie te ve define quién eres. El carácter es el cimiento.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">3.</span><div class="man-item-body"><strong>Relaciones</strong>Eres el promedio de las 5 personas con quienes más tiempo pasas. Elige bien.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">4.</span><div class="man-item-body"><strong>Actitud</strong>No puedes controlar lo que pasa, pero sí cómo respondes. La actitud es una decisión diaria.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">5.</span><div class="man-item-body"><strong>Metas</strong>Una vida sin metas es un barco sin timón. Escribe lo que quieres y traza el camino.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">6.</span><div class="man-item-body"><strong>Disciplina</strong>La disciplina es el puente entre las metas y los logros. Sin ella, todo lo demás es ilusión.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">7.</span><div class="man-item-body"><strong>Diseña tu Destino</strong>No dejes que el azar decida. Planifica hoy lo que quieres que sea tu vida en 5 años.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">8.</span><div class="man-item-body"><strong>Tiempo</strong>El tiempo es tu recurso más escaso. No lo recuperas. Inviértelo, no lo gastes.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">9.</span><div class="man-item-body"><strong>Comunicación</strong>Aprende a expresarte con claridad y convicción. Los que saben comunicar, lideran.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">10.</span><div class="man-item-body"><strong>Abundancia</strong>La mentalidad de abundancia abre puertas que la mentalidad de escasez cierra para siempre.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">11.</span><div class="man-item-body"><strong>Legado</strong>¿Qué quieres que digan de ti cuando ya no estés? Vive hoy de acuerdo a esa respuesta.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#fbbf24">12.</span><div class="man-item-body"><strong>Liderazgo</strong>El liderazgo no es un título, es una actitud. La gente sigue a quien inspira, no a quien manda.</div></div>
+      </div>
+    </div>
+
+    <!-- 2. RUTINA DE MAÑANA -->
+    <div class="man-block" style="border-color:rgba(52,211,153,0.25)">
+      <div class="man-block-hdr" style="background:rgba(52,211,153,0.08);color:#34d399" onclick="manToggle(this)">
+        <span>🌅 Tu Rutina de Mañana</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-rutina-blk"><h4 style="color:#34d399">🕕 6:00 — La hora sagrada</h4><p>Levántate sin apuro pero sin excusas. Esta primera hora es tuya y solo tuya — sin celular, sin notificaciones, sin ruido del mundo. Lee lo que más puedas y medita en silencio. Este momento de conexión es lo que separa los días que fluyen de los días en que sientes que estuviste estancado y que no avanzaste.</p></div>
+        <div class="man-rutina-blk"><h4 style="color:#34d399">🍳 7:00 — Desayuno en familia (hasta las 8:00)</h4><p>Disfruta este momento. Pasará antes de lo que crees. La familia no es un obstáculo entre tú y el trabajo — es la razón por la que trabajas.</p></div>
+        <div class="man-rutina-blk"><h4 style="color:#34d399">🖥️ 8:15 — Oficina (hasta las 11:00)</h4><p>Estas son tus horas de mayor energía. Úsalas para pensar, no para correr. Pregúntate por cada negocio: <em>¿Qué puedo hacer YO para que este negocio crezca?</em></p></div>
+        <div class="man-rutina-highlight">VENDER → ORDENAR → CONTROLAR</div>
+        <div class="man-rutina-blk"><p>Cualquier otra cosa es perder tiempo, y tú lo sabes. <strong style="color:#34d399">Las reuniones van siempre en la tarde, nunca en medio de tu rutina sagrada.</strong> Si alguien quiere reunirse, que sea después de las 4. Punto.</p></div>
+        <div class="man-rutina-blk"><h4 style="color:#f87171">📱 El celular — máximo 2 horas al día</h4><p>Trátalo como lo que es: una herramienta, no un jefe. Cada hora extra que le entregas al teléfono te la estás robando a ti mismo, a tu familia y a tus negocios.</p></div>
+      </div>
+    </div>
+
+    <!-- 3. 10 PERGAMINOS -->
+    <div class="man-block" style="border-color:rgba(129,140,248,0.25)">
+      <div class="man-block-hdr" style="background:rgba(129,140,248,0.08);color:#818cf8" onclick="manToggle(this)">
+        <span>📜 Los 10 Pergaminos — Og Mandino</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">1.</span><div class="man-item-body"><strong>Formaré buenos hábitos y me convertiré en su esclavo.</strong>Los malos hábitos también son esclavitud — elige cuál prefieres.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">2.</span><div class="man-item-body"><strong>Saludaré este día con amor en mi corazón.</strong>El amor es la fuerza más poderosa en las ventas y en la vida.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">3.</span><div class="man-item-body"><strong>Persistiré hasta tener éxito.</strong>Cada "no" me acerca al "sí". El fracaso es solo el camino al éxito.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">4.</span><div class="man-item-body"><strong>Soy el milagro más grande de la naturaleza.</strong>No existe otro ser humano igual a mí — eso es mi ventaja.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">5.</span><div class="man-item-body"><strong>Viviré este día como si fuera el último.</strong>Sin urgencia histérica, pero con plena conciencia de su valor.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">6.</span><div class="man-item-body"><strong>Seré amo de mis emociones.</strong>Las emociones son viento — puedo dejar que me empujen o aprender a navegar con ellas.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">7.</span><div class="man-item-body"><strong>Me reiré del mundo.</strong>El humor es salud, y quien ríe vende más que quien frunce el ceño.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">8.</span><div class="man-item-body"><strong>Multiplicaré mi valor cien veces.</strong>Cada día me pregunto: ¿qué puedo mejorar de lo que hice ayer?</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">9.</span><div class="man-item-body"><strong>Actuaré ahora.</strong>La procrastinación es el asesino silencioso de los sueños. Ahora. Siempre ahora.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#818cf8">10.</span><div class="man-item-body"><strong>Pediré guía.</strong>La humildad de pedir ayuda — a Dios, al universo, a quienes saben más — es la mayor fortaleza.</div></div>
+      </div>
+    </div>
+
+    <!-- 4. RUTINA DE TARDE -->
+    <div class="man-block" style="border-color:rgba(251,191,36,0.25)">
+      <div class="man-block-hdr" style="background:rgba(251,191,36,0.08);color:#fbbf24" onclick="manToggle(this)">
+        <span>🚗 Tu Rutina de Tarde</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-rutina-blk"><p>Sales de la oficina a las 11 y recorres lo tuyo. <strong style="color:#fbbf24">La gente cree en quienes ve — no en quienes se desaparecen.</strong></p></div>
+        <div class="man-rutina-ruta">
+          <span>11:00</span> Recorres Casa Chachi (Rauco) y Casa Claudio Muñoz<br>
+          <span>13:00</span> Almuerzo en familia (hasta las 14:15)<br>
+          <span>14:15</span> Dejas a la Sra. Pauli · Buscas el auto en Corral de Piedra · Recorres Casa Andrea<br>
+          <span>15:00</span> Gimnasio — el camino desde Andrea te lleva directo. Sin excusas. (hasta las 16:00)<br>
+          <span>16:00</span> Rockstar — los profes tienen que verte todos los días. Eres el capitán.<br>
+          <span>17:00</span> Dejas el auto a los niches · Te llevas la camioneta<br>
+          <span>18:00</span> A casa
+        </div>
+        <div class="man-rutina-blk"><h4 style="color:#fbbf24">📅 Cada miércoles — día de clientes</h4><p>En vez de recorrer solo tus obras, a las 10:30 u 11 visitas la obra de algún cliente. Un día a la semana no te van a extrañar. Si llegas a tiempo para recorrer tus obras igual, mejor.</p></div>
+        <div class="man-rutina-blk"><h4 style="color:#fbbf24">📲 El contenido — tu responsabilidad</h4><p><strong style="color:white">Tú subes:</strong> HM Arq · Nanohome · Moragas · Wifis<br><strong style="color:white">Recuérdales (3x/semana):</strong> Rockstar · Lola<br><strong style="color:white">Lola auspicios:</strong> cada viernes sin falta.</p></div>
+      </div>
+    </div>
+
+    <!-- 5. ROBIN SHARMA -->
+    <div class="man-block" style="border-color:rgba(167,139,250,0.25)">
+      <div class="man-block-hdr" style="background:rgba(167,139,250,0.08);color:#a78bfa" onclick="manToggle(this)">
+        <span>⏰ Club de las 5 AM — Robin Sharma</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-rutina-blk"><h4 style="color:#a78bfa">La Fórmula 20/20/20</h4></div>
+        <div class="man-item"><span class="man-item-num" style="color:#a78bfa">20'</span><div class="man-item-body"><strong>Muévete</strong>Ejercicio que eleve el ritmo cardíaco. Activa el cerebro, limpia el cortisol y te prepara para pensar con claridad.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#a78bfa">20'</span><div class="man-item-body"><strong>Reflexiona</strong>Planifica, escribe, agradece en silencio. Sin pantallas. Aquí decides quién quieres ser hoy.</div></div>
+        <div class="man-item"><span class="man-item-num" style="color:#a78bfa">20'</span><div class="man-item-body"><strong>Aprende</strong>Lee, escucha, absorbe algo que te haga más capaz hoy que ayer. El conocimiento compuesto también genera interés.</div></div>
+        <div class="man-rutina-blk" style="margin-top:14px"><h4 style="color:#a78bfa">Los 4 Imperios Interiores</h4></div>
+        <div class="man-4imp">
+          <div class="man-imp-card" style="background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2)"><h4 style="color:#818cf8">🧠 Mindset</h4><p>Lo que crees que es posible define el límite de lo que lograrás. Una mentalidad de crecimiento ve los obstáculos como entrenamiento. Cuida lo que te dices a ti mismo — eres tu primera y más importante audiencia.</p></div>
+          <div class="man-imp-card" style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2)"><h4 style="color:#fbbf24">💛 Heartset</h4><p>No basta con tener la mente clara si el corazón está lleno de resentimientos no procesados. Las emociones acumuladas actúan como ruido de fondo que contamina tus decisiones. Un corazón liviano produce ideas más limpias.</p></div>
+          <div class="man-imp-card" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2)"><h4 style="color:#34d399">💪 Healthset</h4><p>Sin energía física, todo lo demás es teoría. Duerme lo que tu cuerpo necesita, muévete todos los días, come bien. El nivel de energía que traes cada mañana determina cuánto puedes lograr ese día. El gimnasio no es un lujo — es el combustible.</p></div>
+          <div class="man-imp-card" style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2)"><h4 style="color:#a78bfa">🕊️ Soulset</h4><p>Sin sentido de propósito, incluso los días productivos se sienten vacíos. Se cultiva en el silencio de la mañana — en la meditación, en la gratitud, en los momentos de presencia real con las personas que amas.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CIERRE DEL DÍA -->
+    <div class="man-block" style="border-color:rgba(52,211,153,0.2)">
+      <div class="man-block-hdr" style="background:rgba(52,211,153,0.06);color:#34d399" onclick="manToggle(this)">
+        <span>🌙 Cierre del Día — Desde las 7 PM</span><span class="man-chev">▼</span>
+      </div>
+      <div class="man-block-body">
+        <div class="man-rutina-ruta">
+          <span>18:00</span> Llegas a casa — desconéctate de lo virtual, conecta con lo real<br>
+          <span>18:30</span> Once en familia (hasta las 19:30)<br>
+          <span>19:30</span> Tocas guitarra un rato · Juegas con las niñas — ajedrez, rompecabezas, escúchalas<br>
+          <span>Después</span> Lee un rato · Acuéstate y duerme todo lo que puedas para recargar la energía que mañana necesitarás entera
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. FINAL -->
+    <div class="man-final">
+      <h3>🔥 Haz lo que tú mismo escribiste</h3>
+      <p>Haz lo que tú mismo escribiste y ordenaste cada día, y te transformarás en alguien imparable en Curicó.</p>
+      <p>Sigue esta rutina y sin duda serás aquello a lo que le tienes miedo ser — una persona real, no una copia mala de ti mismo. Te ganarás el puesto que dices tener, pero que hasta ahora solo ha sido el reflejo de tu 10%.</p>
+      <div class="man-firme">Ocupa el otro 90%, Nanurroooo 🚀</div>
+    </div>
+
+  </div>
+  <!-- FIN MANIFIESTO -->
+
   <div class="h1-pillars">
     <div class="pillar p1">
       <button class="pillar-edit" onclick="editPillar('familia')">✏️</button>
@@ -792,6 +981,120 @@ function initH1(){
   try{loadH1Frase(false);}catch(e){}
 }
 
+// ═══ MANIFIESTO TTS (con pausa, ±15s, retención de posición) ═══
+var manTTS=(function(){
+  var self={
+    active:false,paused:false,
+    sents:[],idx:0,elapsed:0,
+    timerInt:null,WPS:2.3,voice:null
+  };
+  function getVoice(){
+    if(self.voice)return self.voice;
+    var voices=window.speechSynthesis.getVoices()||[];
+    var pref=['Diego','Jorge','Carlos','Miguel'];
+    var pick=null;
+    for(var i=0;i<pref.length&&!pick;i++){
+      pick=voices.find(function(v){return v.name.toLowerCase().indexOf(pref[i].toLowerCase())>=0;});
+    }
+    if(!pick)pick=voices.find(function(v){return v.lang&&v.lang.startsWith('es');});
+    self.voice=pick;return pick;
+  }
+  function fmt(s){var m=Math.floor(s/60),sec=s%60;return m+':'+(sec<10?'0':'')+sec;}
+  function ui(){
+    var btn=document.getElementById('man-tts-play');
+    var tim=document.getElementById('man-tts-timer');
+    if(btn){
+      if(!self.active){btn.textContent='▶';btn.style.color='#fbbf24';}
+      else if(self.paused){btn.textContent='▶';btn.style.color='#34d399';}
+      else{btn.textContent='⏸';btn.style.color='#f87171';}
+    }
+    if(tim)tim.textContent=self.active?fmt(self.elapsed):'';
+  }
+  function startTimer(){
+    if(self.timerInt)return;
+    self.timerInt=setInterval(function(){
+      if(self.active&&!self.paused){self.elapsed++;ui();}
+    },1000);
+  }
+  function speak(from){
+    window.speechSynthesis.cancel();
+    if(from>=self.sents.length){self.stop();toast('✅ Manifiesto completo — que gran día te espera!');return;}
+    self.idx=from;
+    var utt=new SpeechSynthesisUtterance(self.sents[from]);
+    utt.lang='es-ES';utt.rate=0.92;utt.pitch=0.9;
+    var v=getVoice();if(v)utt.voice=v;
+    utt.onend=function(){if(self.active&&!self.paused)speak(self.idx+1);};
+    utt.onerror=function(){if(self.active&&!self.paused)speak(self.idx+1);};
+    window.speechSynthesis.speak(utt);
+  }
+  self.play=function(){
+    if(!window.speechSynthesis){toast('Usa Safari para audio.');return;}
+    // Build sentences only on first play or after stop
+    if(!self.sents.length){
+      var el=document.querySelector('.h1-manifesto');
+      if(!el){toast('Sin contenido.');return;}
+      var clone=el.cloneNode(true);
+      clone.querySelectorAll('button,.man-chev').forEach(function(b){b.remove();});
+      var txt=clone.innerText||clone.textContent||'';
+      self.sents=txt.split(/(?<=[.!?:])\s+(?=[A-ZÁÉÍÓÚ\d])|(?<=\n)\s*(?=[A-ZÁÉÍÓÚ\d])/).map(function(s){return s.trim();}).filter(function(s){return s.length>4;});
+    }
+    self.active=true;self.paused=false;
+    startTimer();speak(self.idx);ui();
+  };
+  self.pause=function(){
+    window.speechSynthesis.pause();
+    self.paused=true;ui();
+  };
+  self.resume=function(){
+    window.speechSynthesis.resume();
+    self.paused=false;ui();
+  };
+  self.skip=function(secs){
+    if(!self.active)return;
+    var words=Math.abs(secs)*self.WPS;
+    var dir=secs>0?1:-1;
+    var newIdx=self.idx;
+    var rem=words;
+    while(rem>0){
+      var ni=newIdx+dir;
+      if(ni<0||ni>=self.sents.length)break;
+      newIdx=ni;
+      rem-=(self.sents[ni]||'').split(' ').length;
+    }
+    newIdx=Math.max(0,Math.min(newIdx,self.sents.length-1));
+    self.elapsed=Math.max(0,self.elapsed+secs);
+    self.paused=false;
+    speak(newIdx);ui();
+  };
+  self.stop=function(){
+    window.speechSynthesis.cancel();
+    self.active=false;self.paused=false;
+    self.idx=0;self.elapsed=0;self.sents=[];
+    clearInterval(self.timerInt);self.timerInt=null;
+    ui();
+  };
+  return self;
+})();
+function manTTSToggle(){
+  if(!manTTS.active){manTTS.play();}
+  else if(manTTS.paused){manTTS.resume();}
+  else{manTTS.pause();}
+}
+
+function manToggle(hdr){
+  var body=hdr.nextElementSibling;
+  if(!body)return;
+  var isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  var chev=hdr.querySelector('.man-chev');
+  if(chev)chev.textContent=isOpen?'▼':'▲';
+}
+// Auto-open all manifesto blocks on load
+window.addEventListener('load',function(){
+  document.querySelectorAll('.man-block-body').forEach(function(b){b.classList.add('open');});
+  document.querySelectorAll('.man-chev').forEach(function(c){c.textContent='▲';});
+});
+
 function loadH1Frase(force){
   var el=document.getElementById('h1-frase');
   if(!el)return;
@@ -1107,7 +1410,7 @@ function h4SaveDone(k,arr){ls('h4_done_'+k,arr.slice(0,100));}
 function h4Del(k,id){id=parseInt(id);h4SaveList(k,h4LoadList(k).filter(t=>t.id!==id));h4RenderList(k,h4Cls(k));}
 
 function h4Cls(k){return{high:'bl-high',mid:'bl-mid',low:'bl-low',shop:'bl-shop',pay:'bl-pay'}[k]||'bl-day';}
-function h4RenderAll(){h4InjectFixed();h4RenderDay();['high','mid','low','shop','pay'].forEach(k=>h4RenderList(k,h4Cls(k)));try{renderFixedTasks();}catch(e){}}
+function h4RenderAll(){try{h4InitDefaultFixed();}catch(e){}h4InjectFixed();h4RenderDay();['high','mid','low','shop','pay'].forEach(k=>h4RenderList(k,h4Cls(k)));try{renderFixedTasks();}catch(e){}}
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;const t=document.activeElement;
   if(t.id==='h4-inp-day')h4AddDay();
@@ -1559,45 +1862,82 @@ function h4Undo(k,idx){
 // ═══ TAREAS FIJAS (RECURRENTES) ═══
 var DIAS_SEMANA=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 var DIAS_SHORT=['dom','lun','mar','mié','jue','vie','sáb'];
+var CAT_ORDER=['VIDA','VENDER','ORDENAR','CONTROLAR'];
+var CAT_CFG={
+  VIDA:{icon:'🌿',color:'#34d399',bg:'rgba(52,211,153,0.08)'},
+  VENDER:{icon:'💰',color:'#fbbf24',bg:'rgba(251,191,36,0.08)'},
+  ORDENAR:{icon:'📋',color:'#818cf8',bg:'rgba(129,140,248,0.08)'},
+  CONTROLAR:{icon:'🎯',color:'#f472b6',bg:'rgba(244,114,182,0.08)'}
+};
 
 function h4LoadFixed(){return ls('h4_fixed')||[];}
 function h4SaveFixed(arr){ls('h4_fixed',arr);}
 
+function h4CatCollapsed(){return ls('h4_cat_col')||{};}
+function h4CatToggle(cat){var s=h4CatCollapsed();s[cat]=!s[cat];ls('h4_cat_col',s);renderFixedTasks();}
 
 function h4FixedDoneKey(){return 'h4_fdone_'+todayKey();}
 function h4FixedGetDone(){return ls(h4FixedDoneKey())||{};}
 function h4FixedTogDone(key){var d=h4FixedGetDone();d[key]=!d[key];ls(h4FixedDoneKey(),d);renderFixedTasks();}
+
 function renderFixedTasks(){
   var fixed=h4LoadFixed();
   var el=document.getElementById('h4-fixed-list');
   if(!el)return;
   if(!fixed.length){el.innerHTML='<div style="color:var(--dim);font-size:10px;padding:4px 0">Sin tareas fijas. Agrega una con + Agregar.</div>';return;}
   var done=h4FixedGetDone();
-  var groups={};
+  var collapsed=h4CatCollapsed();
+  // Build per-category groups
+  var cats={};
+  CAT_ORDER.forEach(function(c){cats[c]={};});
+  cats['_otros']={};
   fixed.forEach(function(t,i){
+    var cat=t.category||'_otros';
+    if(!cats[cat])cats[cat]={};
     var gk=t.text+(t.time||'')+(t.emp||'');
-    if(!groups[gk])groups[gk]={text:t.text,time:t.time,emp:t.emp,days:[],indices:[]};
-    groups[gk].days.push(t.dayOfWeek);
-    groups[gk].indices.push(i);
+    if(!cats[cat][gk])cats[cat][gk]={text:t.text,time:t.time,emp:t.emp,days:[],indices:[]};
+    cats[cat][gk].days.push(t.dayOfWeek);
+    cats[cat][gk].indices.push(i);
   });
   var html='';
-  Object.keys(groups).forEach(function(gk){
-    var g=groups[gk];
-    var isDone=!!done[gk];
-    var days=g.days.slice().sort(function(a,b){return(a===0?7:a)-(b===0?7:b);});
-    var dayLabel='';
-    if(days.length===7)dayLabel='<span class="fixed-task-day">todos</span>';
-    else if(days.join(',')===([1,2,3,4,5]).join(','))dayLabel='<span class="fixed-task-day">lun-vie</span>';
-    else dayLabel=days.map(function(d){return '<span class="fixed-task-day">'+DIAS_SHORT[d]+'</span>';}).join('');
-    var b64k=btoa(unescape(encodeURIComponent(gk)));
-    html+='<div class="fixed-task-item'+(isDone?' fx-done':'')+'">';
-    html+='<div class="h4-day-chk'+(isDone?' done':'')+'" data-fk="'+b64k+'" onclick="h4FixedTogEl(this)">'+(isDone?'&#10003;':'')+'</div>';
-    html+=dayLabel;
-    if(g.time)html+='<span class="fixed-task-time">'+g.time+'</span>';
-    html+='<span style="flex:1;font-size:11px;'+(isDone?'text-decoration:line-through;opacity:.5':'')+'"">'+esc(g.text)+'</span>';
-    if(g.emp)html+=empTag(g.emp);
-    html+='<button class="h4-rm" style="opacity:.5" data-fidx="'+g.indices.join(',')+'" onclick="h4DelFixedEl(this)">x</button>';
-    html+='</div>';
+  var allCats=CAT_ORDER.concat(Object.keys(cats['_otros']).length?['_otros']:[]);
+  allCats.forEach(function(cat){
+    var groups=cats[cat];
+    if(!groups||!Object.keys(groups).length)return;
+    var cfg=CAT_CFG[cat]||{icon:'📌',color:'var(--indigo)',bg:'rgba(129,140,248,0.08)'};
+    var isCol=!!collapsed[cat];
+    var total=Object.keys(groups).length;
+    var doneCount=Object.keys(groups).filter(function(gk){return !!done[gk];}).length;
+    var pct=total?Math.round(doneCount/total*100):0;
+    var label=cat==='_otros'?'Otras':cat;
+    html+='<div class="fixed-cat-header" onclick="h4CatToggle(\''+cat+'\')" style="color:'+cfg.color+';background:'+cfg.bg+'">'
+      +'<span>'+cfg.icon+'</span><span>'+label+'</span>'
+      +'<span class="fixed-cat-count" style="background:'+cfg.color+'33;color:'+cfg.color+'">'+doneCount+'/'+total+'</span>'
+      +'<span class="fixed-cat-chevron">'+(isCol?'►':'▼')+'</span>'
+      +'</div>';
+    if(!isCol){
+      html+='<div class="fixed-cat-done-bar" style="background:'+cfg.color+';width:'+pct+'%"></div>';
+      html+='<div class="fixed-cat-body">';
+      Object.keys(groups).forEach(function(gk){
+        var g=groups[gk];
+        var isDone=!!done[gk];
+        var days=g.days.slice().sort(function(a,b){return(a===0?7:a)-(b===0?7:b);});
+        var dayLabel='';
+        if(days.length===7)dayLabel='<span class="fixed-task-day">todos</span>';
+        else if(days.join(',')===([1,2,3,4,5]).join(','))dayLabel='<span class="fixed-task-day">lun-vie</span>';
+        else dayLabel=days.map(function(d){return '<span class="fixed-task-day">'+DIAS_SHORT[d]+'</span>';}).join('');
+        var b64k=btoa(unescape(encodeURIComponent(gk)));
+        html+='<div class="fixed-task-item'+(isDone?' fx-done':'')+'" style="border-left-color:'+cfg.color+';background:'+cfg.bg+'">';
+        html+='<div class="h4-day-chk'+(isDone?' done':'')+'" data-fk="'+b64k+'" onclick="h4FixedTogEl(this)">'+(isDone?'&#10003;':'')+'</div>';
+        html+=dayLabel;
+        if(g.time)html+='<span class="fixed-task-time">'+g.time+'</span>';
+        html+='<span style="flex:1;font-size:11px;'+(isDone?'text-decoration:line-through;opacity:.5':'')+'"">'+esc(g.text)+'</span>';
+        if(g.emp)html+=empTag(g.emp);
+        html+='<button class="h4-rm" style="opacity:.5" data-fidx="'+g.indices.join(',')+'" onclick="h4DelFixedEl(this)">x</button>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
   });
   el.innerHTML=html;
 }
@@ -1607,6 +1947,38 @@ function h4FixedTogEl(el){
 function h4DelFixedEl(el){
   var indices=(el.getAttribute('data-fidx')||'').split(',').map(Number);
   h4DelFixedGroup(indices);
+}
+
+// ─── Tareas por defecto (se cargan una sola vez en h4_fixed_v2) ───
+var H4_DEFAULT_FIXED=[
+  {text:'Saludar',category:'VIDA'},
+  {text:'Duolingo',category:'VIDA'},
+  {text:'Deporte',category:'VIDA'},
+  {text:'Leer',category:'VIDA'},
+  {text:'Meditar',category:'VIDA'},
+  {text:'Guitarra',category:'VIDA'},
+  {text:'Batería',category:'VIDA'},
+  {text:'Compartir',category:'VIDA'},
+  {text:'Revisar Nora',category:'VENDER'},
+  {text:'Promocionar Empresas',category:'VENDER'},
+  {text:'Marketplace Terrenos',category:'VENDER'},
+  {text:'Actualizar Excel Nano',category:'ORDENAR'},
+  {text:'Actualizar gastos Daniel',category:'ORDENAR'},
+  {text:'Revisar avances (Moragas · HM Arq · Nanohome · Lola · Rockstar · Wifis · Inmo Vichuquén)',category:'ORDENAR'},
+  {text:'Visitar Empresas (Moragas · Lola · Rockstar · HM Arq)',category:'CONTROLAR'},
+  {text:'Visitar Obras (Corral de Piedra · Rockstar · Chachi Flores · Claudio Muñoz · Andrea Pérez)',category:'CONTROLAR'}
+];
+function h4InitDefaultFixed(){
+  if(ls('h4_fixed_v2'))return;
+  var arr=[];
+  var days=[1,2,3,4,5];
+  H4_DEFAULT_FIXED.forEach(function(t){
+    days.forEach(function(d){
+      arr.push({text:t.text,dayOfWeek:d,time:'',emp:'',category:t.category});
+    });
+  });
+  h4SaveFixed(arr);
+  ls('h4_fixed_v2',1);
 }
 
 
@@ -1624,7 +1996,9 @@ function h4DelFixed(idx){
 
 function openAddFixed(){
   showModal('📌 Agregar tarea fija recurrente',
-    '<label>Tarea</label><input type="text" id="fix-txt" style="width:100%" placeholder="Ej: Tocar batería"/>'
+    '<label>Categoría</label>'
+    +'<select id="fix-cat" style="width:100%"><option value="VIDA">🌿 VIDA</option><option value="VENDER">💰 VENDER</option><option value="ORDENAR">📋 ORDENAR</option><option value="CONTROLAR">🎯 CONTROLAR</option></select>'
+    +'<label>Tarea</label><input type="text" id="fix-txt" style="width:100%" placeholder="Ej: Tocar batería"/>'
     +'<label>Día de la semana</label>'
     +'<select id="fix-day" style="width:100%"><option value="1-5">Lunes a Viernes</option><option value="6-0">Sábado y Domingo</option><option value="all">Todos los días</option><option value="1">Solo Lunes</option><option value="2">Solo Martes</option><option value="3">Solo Miércoles</option><option value="4">Solo Jueves</option><option value="5">Solo Viernes</option><option value="6">Solo Sábado</option><option value="0">Solo Domingo</option></select>'
     +'<label>Hora (opcional)</label><input type="text" id="fix-time" style="width:100%" placeholder="Ej: 11:00"/>'
@@ -1640,12 +2014,13 @@ function saveFixed(){
   var dayVal=(document.getElementById('fix-day')||{}).value||'1';
   var time=((document.getElementById('fix-time')||{}).value||'').trim();
   var emp=((document.getElementById('fix-emp')||{}).value||'');
+  var category=((document.getElementById('fix-cat')||{}).value||'VIDA');
   var days=[];
   if(dayVal==='1-5')days=[1,2,3,4,5];
   else if(dayVal==='6-0')days=[6,0];
   else if(dayVal==='all')days=[0,1,2,3,4,5,6];
   else days=[parseInt(dayVal)];
-  days.forEach(function(d){arr.push({text:txt,dayOfWeek:d,time:time,emp:emp});});
+  days.forEach(function(d){arr.push({text:txt,dayOfWeek:d,time:time,emp:emp,category:category});});
   h4SaveFixed(arr);closeModal();renderFixedTasks();
   var label=dayVal==='1-5'?'Lun-Vie':dayVal==='6-0'?'Sab-Dom':dayVal==='all'?'todos los dias':DIAS_SEMANA[parseInt(dayVal)];
   toast('✅ Tarea fija guardada — cada '+label);
