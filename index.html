@@ -477,6 +477,10 @@ window.addEventListener('load',function(){
         <div class="man-rutina-blk"><h4 style="color:#34d399">🖥️ 8:15 — Oficina (hasta las 11:00)</h4><p>Estas son tus horas de mayor energía. Úsalas para pensar, no para correr. Pregúntate por cada negocio: <em>¿Qué puedo hacer YO para que este negocio crezca?</em></p></div>
         <div class="man-rutina-highlight">VENDER → ORDENAR → CONTROLAR</div>
         <div class="man-rutina-blk"><p>Cualquier otra cosa es perder tiempo, y tú lo sabes. <strong style="color:#34d399">Las reuniones van siempre en la tarde, nunca en medio de tu rutina sagrada.</strong> Si alguien quiere reunirse, que sea después de las 4. Punto.</p></div>
+        <div class="man-rutina-ruta">
+          <span>11:00</span> Recorres Casa Chachi (Rauco) y Casa Claudio Muñoz<br>
+          <span>13:00</span> Almuerzo en familia (hasta las 14:15)
+        </div>
         <div class="man-rutina-blk"><h4 style="color:#f87171">📱 El celular — máximo 2 horas al día</h4><p>Trátalo como lo que es: una herramienta, no un jefe. Cada hora extra que le entregas al teléfono te la estás robando a ti mismo, a tu familia y a tus negocios.</p></div>
       </div>
     </div>
@@ -506,10 +510,8 @@ window.addEventListener('load',function(){
         <span>🚗 Tu Rutina de Tarde</span><span class="man-chev">▼</span>
       </div>
       <div class="man-block-body">
-        <div class="man-rutina-blk"><p>Sales de la oficina a las 11 y recorres lo tuyo. <strong style="color:#fbbf24">La gente cree en quienes ve — no en quienes se desaparecen.</strong></p></div>
+        <div class="man-rutina-blk"><p>A las 14:15 arranca tu tarde. <strong style="color:#fbbf24">La gente cree en quienes ve — no en quienes se desaparecen.</strong></p></div>
         <div class="man-rutina-ruta">
-          <span>11:00</span> Recorres Casa Chachi (Rauco) y Casa Claudio Muñoz<br>
-          <span>13:00</span> Almuerzo en familia (hasta las 14:15)<br>
           <span>14:15</span> Dejas a la Sra. Pauli · Buscas el auto en Corral de Piedra · Recorres Casa Andrea<br>
           <span>15:00</span> Gimnasio — el camino desde Andrea te lleva directo. Sin excusas. (hasta las 16:00)<br>
           <span>16:00</span> Rockstar — los profes tienen que verte todos los días. Eres el capitán.<br>
@@ -1161,6 +1163,20 @@ function metaEdit(id){
   var nuevo=prompt('Editar meta:',x.text);
   if(nuevo&&nuevo.trim()){x.text=nuevo.trim();ls('h1_metas',metas);renderMetas();}
 }
+function initDefaultMetas(){
+  if(ls('h1_metas_v1'))return;
+  var existing=ls('h1_metas')||[];
+  if(!existing.length){
+    var defaults=[
+      'Quiero tener un cuerpo saludable a fin de año',
+      'Quiero que mis hijas estén felices — en especial Maite, que lo está pasando mal',
+      'Quiero a fin de año tener 100 millones de pesos'
+    ];
+    var metas=defaults.map(function(t,i){return {id:'m_def'+i,text:t,done:false};});
+    ls('h1_metas',metas);
+  }
+  ls('h1_metas_v1',1);
+}
 function renderMetas(){
   var el=document.getElementById('h1-metas-list');if(!el)return;
   var metas=ls('h1_metas')||[];
@@ -1671,8 +1687,11 @@ function renderH6Hist(){
     var yr=d.getFullYear(),mn=d.getMonth();
     var dim=new Date(yr,mn+1,0).getDate();
     var firstDow=(new Date(yr,mn,1).getDay()+6)%7;
+    // Count workout days this month
+    var monthDays=0;
+    for(var dc=1;dc<=dim;dc++){var dsc=yr+'-'+String(mn+1).padStart(2,'0')+'-'+String(dc).padStart(2,'0');if(byDate[dsc])monthDays++;}
     html+='<div style="margin-bottom:16px">';
-    html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px">'+MNAMES[mn]+' '+yr+'</div>';
+    html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;display:flex;align-items:center;gap:8px;">'+MNAMES[mn]+' '+yr+(monthDays?'<span style="background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.4);border-radius:999px;color:#fbbf24;font-size:9px;font-weight:800;padding:1px 8px;">⭐ '+monthDays+' '+(monthDays===1?'día':'días')+'</span>':'')+'</div>';
     html+='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">';
     ['L','M','M','J','V','S','D'].forEach(function(lbl){html+='<div style="text-align:center;font-size:8px;color:#4b5563;font-weight:700;padding-bottom:3px">'+lbl+'</div>';});
     for(var i=0;i<firstDow;i++)html+='<div></div>';
@@ -1680,9 +1699,9 @@ function renderH6Hist(){
       var ds=yr+'-'+String(mn+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
       var worked=byDate[ds];var isFuture=ds>todayStr;var isToday=ds===todayStr;
       if(worked){
-        html+='<div onclick="h6ShowDayDetail(\''+ds+'\')" style="text-align:center;padding:3px 1px;border-radius:5px;cursor:pointer;background:rgba(52,211,153,.18);border:1px solid rgba(52,211,153,.5);">';
-        html+='<div style="font-size:9px;color:#34d399;font-weight:700">'+day+'</div>';
-        html+='<div style="font-size:9px;color:#34d399;line-height:1">✓</div></div>';
+        html+='<div onclick="h6ShowDayDetail(\''+ds+'\')" style="text-align:center;padding:3px 1px;border-radius:5px;cursor:pointer;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.5);">';
+        html+='<div style="font-size:9px;color:#fbbf24;font-weight:700">'+day+'</div>';
+        html+='<div style="font-size:12px;line-height:1">⭐</div></div>';
       } else if(isFuture){
         html+='<div style="text-align:center;padding:3px 1px;border-radius:5px;opacity:.15"><div style="font-size:9px;color:#6b7280">'+day+'</div></div>';
       } else {
@@ -1880,6 +1899,35 @@ function h4FixedDoneKey(){return 'h4_fdone_'+todayKey();}
 function h4FixedGetDone(){return ls(h4FixedDoneKey())||{};}
 function h4FixedTogDone(key){var d=h4FixedGetDone();d[key]=!d[key];ls(h4FixedDoneKey(),d);renderFixedTasks();}
 
+function h4FixedMoveGroup(cat,b64gk,dir){
+  try{
+    var gk=decodeURIComponent(escape(atob(b64gk)));
+    var arr=h4LoadFixed();
+    // Extract entries for this category with their original indices
+    var catEntries=[];
+    arr.forEach(function(e,i){if((e.category||'_otros')===cat)catEntries.push({idx:i,e:e});});
+    // Build group order (unique gk in order of first appearance)
+    var seen={};var groupOrder=[];var groupMap={};
+    catEntries.forEach(function(ce){
+      var egk=ce.e.text+(ce.e.time||'')+(ce.e.emp||'');
+      if(!seen[egk]){seen[egk]=true;groupOrder.push(egk);groupMap[egk]=[];}
+      groupMap[egk].push(ce);
+    });
+    var gidx=groupOrder.indexOf(gk);
+    if(gidx<0)return;
+    var newGidx=gidx+dir;
+    if(newGidx<0||newGidx>=groupOrder.length)return;
+    // Swap groups
+    var tmp=groupOrder[gidx];groupOrder[gidx]=groupOrder[newGidx];groupOrder[newGidx]=tmp;
+    // Rebuild: get sorted original indices, assign reordered entries
+    var origIdxs=catEntries.map(function(ce){return ce.idx;}).sort(function(a,b){return a-b;});
+    var reordered=[];
+    groupOrder.forEach(function(g){groupMap[g].forEach(function(ce){reordered.push(ce.e);});});
+    reordered.forEach(function(e,i){arr[origIdxs[i]]=e;});
+    h4SaveFixed(arr);renderFixedTasks();
+  }catch(err){}
+}
+
 function renderFixedTasks(){
   var fixed=h4LoadFixed();
   var el=document.getElementById('h4-fixed-list');
@@ -1918,7 +1966,9 @@ function renderFixedTasks(){
     if(!isCol){
       html+='<div class="fixed-cat-done-bar" style="background:'+cfg.color+';width:'+pct+'%"></div>';
       html+='<div class="fixed-cat-body">';
-      Object.keys(groups).forEach(function(gk){
+      var gkList=Object.keys(groups);
+      var mvStyle='flex-shrink:0;background:none;border:none;color:'+cfg.color+';font-size:10px;cursor:pointer;padding:0 1px;line-height:1;opacity:';
+      gkList.forEach(function(gk,gi){
         var g=groups[gk];
         var isDone=!!done[gk];
         var days=g.days.slice().sort(function(a,b){return(a===0?7:a)-(b===0?7:b);});
@@ -1927,7 +1977,11 @@ function renderFixedTasks(){
         else if(days.join(',')===([1,2,3,4,5]).join(','))dayLabel='<span class="fixed-task-day">lun-vie</span>';
         else dayLabel=days.map(function(d){return '<span class="fixed-task-day">'+DIAS_SHORT[d]+'</span>';}).join('');
         var b64k=btoa(unescape(encodeURIComponent(gk)));
+        var catQ="'"+cat+"'";
+        var upBtn='<button style="'+mvStyle+(gi===0?'0.2':'0.8')+'" onclick="h4FixedMoveGroup('+catQ+',\''+b64k+'\',-1)" title="Subir">▲</button>';
+        var dnBtn='<button style="'+mvStyle+(gi===gkList.length-1?'0.2':'0.8')+'" onclick="h4FixedMoveGroup('+catQ+',\''+b64k+'\',1)" title="Bajar">▼</button>';
         html+='<div class="fixed-task-item'+(isDone?' fx-done':'')+'" style="border-left-color:'+cfg.color+';background:'+cfg.bg+'">';
+        html+='<div style="display:flex;flex-direction:column;margin-right:2px;">'+upBtn+dnBtn+'</div>';
         html+='<div class="h4-day-chk'+(isDone?' done':'')+'" data-fk="'+b64k+'" onclick="h4FixedTogEl(this)">'+(isDone?'&#10003;':'')+'</div>';
         html+=dayLabel;
         if(g.time)html+='<span class="fixed-task-time">'+g.time+'</span>';
@@ -2130,7 +2184,7 @@ window.addEventListener('load', function(){
   // Init cada sección de forma aislada — si una falla no rompe las demás
   setTimeout(function(){try{renderPillars();}catch(e){}},0);
   setTimeout(function(){try{renderH1IntHist();}catch(e){}},0);
-  setTimeout(function(){try{renderMetas();}catch(e){}},0);
+  setTimeout(function(){try{initDefaultMetas();renderMetas();}catch(e){}},0);
   setTimeout(function(){try{loadH1Frase(false);}catch(e){}},100);
   setTimeout(function(){try{renderFixedTasks();}catch(e){}},50);
   setTimeout(function(){try{h4InjectFixed();}catch(e){}},50);
