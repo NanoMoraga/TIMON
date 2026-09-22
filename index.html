@@ -793,7 +793,7 @@ function ls(k,v){
     }
   }catch(e){return null;}
 }
-function todayKey(){return new Date().toISOString().slice(0,10);}
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function toast(msg,dur=2400){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),dur);}
 function copy(txt){navigator.clipboard.writeText(txt).then(()=>toast('✅ Copiado'));}
@@ -1354,7 +1354,8 @@ function h4LoadDay(d){
     }
     if(d===todayKey()){
       var y=new Date();y.setDate(y.getDate()-1);
-      var prev=ls("h4_day_"+y.toISOString().slice(0,10))||ls("h4_day_prev");
+      var ystr=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+      var prev=ls("h4_day_"+ystr)||ls("h4_day_prev");
       if(prev&&prev.length){
         var carried=prev.map(function(t){return {id:"d"+Date.now()+(Math.random()+"").slice(2),text:t.text,done:false};});
         ls("h4_day",carried);ls("h4_last_day",todayKey());return carried;
@@ -1397,7 +1398,8 @@ function h4RenderDay(){
 }
 
 function h4TogDay(id){var t=h4LoadDay(h4Day);var x=t.find(function(i){return i.id===id;});if(x){x.done=!x.done;h4SaveDay(h4Day,t);if(h4Day===todayKey())ls("h4_last_day",todayKey());}h4RenderDay();}
-function h4TogDayEl(el){h4TogDay(el.getAttribute('data-id'));}
+var _h4TogLock=0;
+function h4TogDayEl(el){if(Date.now()-_h4TogLock<500)return;_h4TogLock=Date.now();h4TogDay(el.getAttribute('data-id'));}
 function h4DelDayEl(el){h4DelDay(el.getAttribute('data-id'));}
 
 function h4DelDay(id){h4SaveDay(h4Day,h4LoadDay(h4Day).filter(t=>t.id!==id));h4RenderDay();}
@@ -1996,6 +1998,7 @@ function renderFixedTasks(){
   el.innerHTML=html;
 }
 function h4FixedTogEl(el){
+  if(Date.now()-_h4TogLock<500)return;_h4TogLock=Date.now();
   try{var gk=decodeURIComponent(escape(atob(el.getAttribute('data-fk'))));h4FixedTogDone(gk);}catch(e){}
 }
 function h4DelFixedEl(el){
