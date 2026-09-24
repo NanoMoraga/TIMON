@@ -1025,8 +1025,11 @@ var manTTS=(function(){
     var utt=new SpeechSynthesisUtterance(self.sents[from]);
     utt.lang='es-ES';utt.rate=0.92;utt.pitch=0.9;
     var v=getVoice();if(v)utt.voice=v;
-    utt.onend=function(){if(self.active&&!self.paused)speak(self.idx+1);};
-    utt.onerror=function(){if(self.active&&!self.paused)speak(self.idx+1);};
+    // fired flag prevents double-call: cancel() can fire onerror on the same utterance that just fired onend
+    var fired=false;
+    function next(){if(fired||!self.active||self.paused)return;fired=true;speak(self.idx+1);}
+    utt.onend=next;
+    utt.onerror=next;
     window.speechSynthesis.speak(utt);
   }
   self.play=function(){
