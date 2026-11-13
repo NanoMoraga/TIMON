@@ -188,6 +188,16 @@ input::placeholder,textarea::placeholder{color:var(--dim);}
 
 /* ═══ H4 AGENDA ═══ */
 .h4-board{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.h4-unified-add{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:9px;padding:7px 9px;}
+.h4-unified-add input{flex:1;min-width:140px;padding:5px 8px;font-size:12px;background:transparent;border:none;color:var(--text);}
+.h4-unified-add input:focus{outline:none;}
+.h4-unified-add select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:10px;padding:4px 5px;outline:none;max-width:95px;}
+.h4-unified-add button{padding:5px 13px;background:rgba(129,140,248,0.15);border:1px solid rgba(129,140,248,0.3);border-radius:6px;color:var(--indigo);cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;}
+.h4-unified-add button:hover{background:rgba(129,140,248,0.28);}
+.pri-badge{font-size:10px;flex-shrink:0;width:16px;text-align:center;}
+.fixed-collapse-hdr{cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;padding:6px 0 4px 0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);}
+.fixed-collapse-hdr:hover{color:var(--muted);}
+.fixed-collapse-arrow{font-size:9px;transition:transform .2s;}
 .h4-panel{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px;}
 .h4-ptitle{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .h4-dnav{display:flex;align-items:center;gap:5px;margin-bottom:9px;}
@@ -643,40 +653,40 @@ window.addEventListener('load',function(){
       <div class="h4-add" id="h4-day-add-row"><input type="text" id="h4-inp-day" placeholder="Agregar ítem…"/><button onclick="h4AddDay()">+</button></div>
       <div id="h4-list-day"></div>
       <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-day')">✅ Realizadas del día <span>▼</span></div><div class="hist-body" id="h4-done-day"></div></div>
-      <div class="fixed-tasks-section">
-        <div class="fixed-tasks-title">📌 Tareas fijas <button class="btn b-ghost" style="font-size:10px;padding:3px 8px" onclick="openAddFixed()">+ Agregar</button></div>
-        <div id="h4-fixed-list"></div>
+      <div class="fixed-tasks-section" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div class="fixed-collapse-hdr" onclick="h4ToggleFixed()">
+          <span>📌 Rutina <span id="h4-fixed-arrow" class="fixed-collapse-arrow">▶</span></span>
+          <button class="btn b-ghost" style="font-size:10px;padding:3px 8px" onclick="event.stopPropagation();openAddFixed()">+ Agregar</button>
+        </div>
+        <div id="h4-fixed-list" style="display:none"></div>
       </div>
     </div>
-    <div class="h4-panel" style="border-top:3px solid var(--red)">
-      <div class="h4-ptitle" style="color:var(--red)">🔴 Urgente <span id="h4c-high" style="font-size:9px;background:rgba(248,113,113,0.12);border-radius:999px;padding:1px 7px">0</span></div>
-      <div class="h4-add-row"><input type="text" id="h4-inp-high" placeholder="Tarea urgente…"/><select id="h4-emp-high"><option value="">Empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmo</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select><button onclick="h4Add('high')">+</button></div>
-      <div id="h4-list-high"></div>
-      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-high')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-high"></div></div>
-    </div>
-    <div class="h4-panel" style="border-top:3px solid var(--amber)">
-      <div class="h4-ptitle" style="color:var(--amber)">🟡 Mediana urgencia <span id="h4c-mid" style="font-size:9px;background:rgba(251,191,36,0.12);border-radius:999px;padding:1px 7px">0</span></div>
-      <div class="h4-add-row"><input type="text" id="h4-inp-mid" placeholder="Tarea mediana…"/><select id="h4-emp-mid"><option value="">Empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmo</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select><button onclick="h4Add('mid')">+</button></div>
-      <div id="h4-list-mid"></div>
-      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-mid')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-mid"></div></div>
-    </div>
-    <div class="h4-panel" style="border-top:3px solid var(--muted)">
-      <div class="h4-ptitle" style="color:var(--muted)">⚪ Poca urgencia <span id="h4c-low" style="font-size:9px;background:rgba(100,116,139,0.1);border-radius:999px;padding:1px 7px">0</span></div>
-      <div class="h4-add-row"><input type="text" id="h4-inp-low" placeholder="Poca urgencia…"/><select id="h4-emp-low"><option value="">Empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmo</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select><button onclick="h4Add('low')">+</button></div>
-      <div id="h4-list-low"></div>
-      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-low')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-low"></div></div>
-    </div>
-    <div class="h4-panel" style="border-top:3px solid var(--green)">
-      <div class="h4-ptitle" style="color:var(--green)">🛒 Compras <span id="h4c-shop" style="font-size:9px;background:rgba(52,211,153,0.1);border-radius:999px;padding:1px 7px">0</span></div>
-      <div class="h4-add-row"><input type="text" id="h4-inp-shop" placeholder="Agregar compra…"/><select id="h4-emp-shop"><option value="">Empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmo</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select><button onclick="h4Add('shop')">+</button></div>
-      <div id="h4-list-shop"></div>
-      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-shop')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-shop"></div></div>
-    </div>
-    <div class="h4-panel" style="border-top:3px solid var(--rose)">
-      <div class="h4-ptitle" style="color:var(--rose)">💸 Pagos <span id="h4c-pay" style="font-size:9px;background:rgba(251,113,133,0.1);border-radius:999px;padding:1px 7px">0</span></div>
-      <div class="h4-add-row"><input type="text" id="h4-inp-pay" placeholder="Agregar pago…"/><select id="h4-emp-pay"><option value="">Empresa</option><option value="moragas">🔥 Moragas</option><option value="hm">❤️ HM Arq</option><option value="nano">🏗 Nanohome</option><option value="inmo">🌳 Inmo</option><option value="lola">📻 Lola</option><option value="rock">🎸 Rockstar</option><option value="wifis">🖨 Wifis</option><option value="personal">👤 Personal</option></select><button onclick="h4Add('pay')">+</button></div>
-      <div id="h4-list-pay"></div>
-      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-pay')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-pay"></div></div>
+    <div class="h4-panel" style="border-top:3px solid var(--gold);grid-column:1/-1">
+      <div class="h4-ptitle" style="color:var(--gold)">📋 Pendientes <span id="h4c-unified" style="font-size:9px;background:rgba(212,168,67,0.12);border-radius:999px;padding:1px 7px">0</span></div>
+      <div class="h4-unified-add">
+        <input type="text" id="h4-inp-unified" placeholder="Nueva tarea… (Enter para agregar)" onkeydown="if(event.key==='Enter')h4AddUnified()"/>
+        <select id="h4-pri-unified" style="max-width:100px">
+          <option value="high">🔴 Urgente</option>
+          <option value="mid" selected>🟡 Mediana</option>
+          <option value="low">⚪ Baja</option>
+          <option value="shop">🛒 Compra</option>
+          <option value="pay">💸 Pago</option>
+        </select>
+        <select id="h4-emp-unified">
+          <option value="">Empresa</option>
+          <option value="moragas">🔥 Moragas</option>
+          <option value="hm">❤️ HM Arq</option>
+          <option value="nano">🏗 Nanohome</option>
+          <option value="inmo">🌳 Inmo</option>
+          <option value="lola">📻 Lola</option>
+          <option value="rock">🎸 Rockstar</option>
+          <option value="wifis">🖨 Wifis</option>
+          <option value="personal">👤 Personal</option>
+        </select>
+        <button onclick="h4AddUnified()">+</button>
+      </div>
+      <div id="h4-list-unified"></div>
+      <div class="done-section"><div class="done-toggle" onclick="toggleHist('h4-done-unified')">✅ Realizadas <span>▼</span></div><div class="hist-body" id="h4-done-unified"></div></div>
     </div>
   </div>
 </div>
@@ -752,7 +762,7 @@ window.addEventListener('load',function(){
 </div>
 </div>
 
-<div class="tab-panel" id="h_agenda"><div class="page-wrap"><div class="sec-title">Agenda</div><div class="sec-sub">Calendario, eventos fijos y tareas recurrentes</div><div class="cal-wrap"><div class="cal-header"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-title-txt" id="cal-title"></span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button><button class="btn b-gold" onclick="openAddEvent()">+ Evento</button></div><div class="cal-grid" id="cal-grid"><div class="cal-day-hdr">Lun</div><div class="cal-day-hdr">Mar</div><div class="cal-day-hdr">Mie</div><div class="cal-day-hdr">Jue</div><div class="cal-day-hdr">Vie</div><div class="cal-day-hdr">Sab</div><div class="cal-day-hdr">Dom</div></div><div class="day-detail" id="day-detail" style="display:none"><div style="font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><span id="detail-title"></span><button class="btn b-ghost" style="font-size:11px;padding:3px 9px" onclick="document.getElementById('day-detail').style.display='none'">x</button></div><div id="detail-events"></div></div><div class="rec-panel"><div class="rec-panel-hdr">Rutina<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddRecurring()">+ Fijo</button></div><div id="rec-list-cal"></div></div><div class="rec-panel" style="margin-top:10px"><div class="rec-panel-hdr" style="color:#fbbf24">Fijos mensuales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddMonthly()">+ Mensual</button></div><div id="monthly-list-cal"></div></div></div></div></div>
+<div class="tab-panel" id="h_agenda"><div class="page-wrap"><div class="sec-title">Agenda</div><div class="sec-sub">Calendario, eventos fijos y tareas recurrentes</div><div class="cal-wrap"><div class="cal-header"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-title-txt" id="cal-title"></span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button><button class="btn b-gold" onclick="openAddEvent()">+ Evento</button></div><div class="cal-grid" id="cal-grid"><div class="cal-day-hdr">Lun</div><div class="cal-day-hdr">Mar</div><div class="cal-day-hdr">Mie</div><div class="cal-day-hdr">Jue</div><div class="cal-day-hdr">Vie</div><div class="cal-day-hdr">Sab</div><div class="cal-day-hdr">Dom</div></div><div class="day-detail" id="day-detail" style="display:none"><div style="font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><span id="detail-title"></span><button class="btn b-ghost" style="font-size:11px;padding:3px 9px" onclick="document.getElementById('day-detail').style.display='none'">x</button></div><div id="detail-events"></div></div><div class="rec-panel"><div class="rec-panel-hdr">Rutina<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddRecurring()">+ Fijo</button><button class="btn b-ghost" style="font-size:10px;padding:3px 8px;color:var(--rose);border-color:rgba(251,113,133,0.3)" onclick="if(confirm('¿Limpiar toda la rutina?')){ls('cal_rec',[]);ls('cal_rec_v','0');renderRecListCal();renderCal();toast('🗑 Rutina limpiada')}">🗑</button></div><div id="rec-list-cal"></div></div><div class="rec-panel" style="margin-top:10px"><div class="rec-panel-hdr" style="color:#fbbf24">Fijos mensuales<button class="btn b-ghost" style="font-size:10px;padding:3px 8px;margin-left:auto" onclick="openAddMonthly()">+ Mensual</button><button class="btn b-ghost" style="font-size:10px;padding:3px 8px;color:var(--rose);border-color:rgba(251,113,133,0.3)" onclick="if(confirm('¿Limpiar fijos mensuales?')){ls('cal_monthly',[]);ls('cal_monthly_v','0');renderMonthlyList();renderCal();toast('🗑 Fijos mensuales limpiados')}">🗑</button></div><div id="monthly-list-cal"></div></div></div></div></div>
 <div class="tab-panel" id="h8"><div class="page-wrap"><div class="sec-title">Mi dia</div><div style="max-width:700px;margin:0 auto"><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px"><div style="text-align:center"><div id="res-score-num" style="font-size:38px;font-weight:900;color:#d4a843">0%</div><div style="font-size:11px;color:#6b7280">productividad</div></div><div style="flex:1"><div style="height:7px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;max-width:150px"><div id="res-score-fill" style="height:100%;background:linear-gradient(90deg,#d4a843,#f0c060);border-radius:99px;width:0%;transition:width .5s"></div></div><div id="res-score-msg" style="font-size:11px;color:#6b7280;margin-top:5px"></div></div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">🎯 Mis Metas</div><div id="res-intencion" style="font-size:12px;color:#9ca3af;font-style:italic">Sin metas registradas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fb923c;margin-bottom:7px">Tareas fijas realizadas</div><div id="res-fijas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas fijas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#818cf8;margin-bottom:7px">Tareas del dia</div><div id="res-tareas" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#d4a843;margin-bottom:7px">Urgentes / pendientes completadas</div><div id="res-urgentes" style="font-size:12px;color:#9ca3af;font-style:italic">Sin tareas.</div></div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#34d399;margin-bottom:7px">Deporte esta semana</div><div id="res-deporte" style="font-size:12px;color:#9ca3af;font-style:italic">Sin entrenamiento.</div></div><div style="text-align:center;margin-top:12px"><button class="btn b-ghost" onclick="renderResumen()">Actualizar</button></div><div style="margin-top:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#6b7280;margin-bottom:8px">Historial de dias</div><div style="position:relative;margin-bottom:10px"><input type="text" id="hist-search" placeholder="Buscar actividad... (ej: reunion, bateria, Nanohome)" style="width:100%;box-sizing:border-box;padding-left:28px;font-size:12px" oninput="renderHistorial()"/><span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:13px">&#128269;</span></div><div id="res-historial"></div></div></div></div></div>
 </div><!-- /content -->
 </div><!-- /shell -->
@@ -1458,10 +1468,11 @@ function h4SaveDone(k,arr){ls('h4_done_'+k,arr.slice(0,100));}
 function h4Del(k,id){id=parseInt(id);h4SaveList(k,h4LoadList(k).filter(t=>t.id!==id));h4RenderList(k,h4Cls(k));}
 
 function h4Cls(k){return{high:'bl-high',mid:'bl-mid',low:'bl-low',shop:'bl-shop',pay:'bl-pay'}[k]||'bl-day';}
-function h4RenderAll(){try{h4InitDefaultFixed();}catch(e){}h4InjectFixed();h4RenderDay();['high','mid','low','shop','pay'].forEach(k=>h4RenderList(k,h4Cls(k)));try{renderFixedTasks();}catch(e){}}
+function h4RenderAll(){try{h4InitDefaultFixed();}catch(e){}h4InjectFixed();h4RenderDay();h4RenderUnified();try{renderFixedTasks();}catch(e){}}
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;const t=document.activeElement;
   if(t.id==='h4-inp-day')h4AddDay();
+  else if(t.id==='h4-inp-unified')h4AddUnified();
   else if(t.id&&t.id.startsWith('h4-inp-'))h4Add(t.id.replace('h4-inp-',''));
 });
 
@@ -1911,6 +1922,95 @@ function h4Undo(k,idx){
   toast('↩ Tarea recuperada');
 }
 
+// ═══ PANEL UNIFICADO DE TAREAS ═══
+var PRI_ICON={'high':'🔴','mid':'🟡','low':'⚪','shop':'🛒','pay':'💸'};
+var PRI_COLOR={'high':'var(--red)','mid':'var(--amber)','low':'var(--muted)','shop':'var(--green)','pay':'var(--rose)'};
+
+function h4AddUnified(){
+  var inp=document.getElementById('h4-inp-unified');
+  var priSel=document.getElementById('h4-pri-unified');
+  var empSel=document.getElementById('h4-emp-unified');
+  var txt=inp?inp.value.trim():'';
+  if(!txt)return;
+  var k=priSel?priSel.value:'mid';
+  var emp=empSel?empSel.value:'';
+  var arr=h4LoadList(k);
+  arr.push({id:h4nid++,text:txt,emp:emp,done:false});
+  h4SaveList(k,arr);
+  if(inp)inp.value='';
+  h4RenderUnified();
+  toast('✅ Agregado');
+}
+
+function h4RenderUnified(){
+  var all=[];
+  ['high','mid','low','shop','pay'].forEach(function(k){
+    h4LoadList(k).forEach(function(t){all.push({k:k,t:t});});
+  });
+  var cntEl=document.getElementById('h4c-unified');
+  if(cntEl)cntEl.textContent=all.length;
+  var el=document.getElementById('h4-list-unified');
+  if(!el)return;
+  el.innerHTML=all.map(function(x){
+    var k=x.k,t=x.t;
+    var priColor=PRI_COLOR[k]||'var(--muted)';
+    return '<div class="h4-item" style="border-left:3px solid '+priColor+';padding-left:7px">'
+      +'<span class="pri-badge" title="'+k+'">'+PRI_ICON[k]+'</span>'
+      +(t.emp?empTag(t.emp):'')
+      +'<div class="h4-chk" data-k="'+k+'" data-id="'+t.id+'" onclick="h4ChkUnified(this)"></div>'
+      +'<span class="h4-txt">'+(t.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
+      +'<button class="h4-rm" data-k="'+k+'" data-id="'+t.id+'" onclick="h4RmUnified(this)">x</button>'
+      +'</div>';
+  }).join('')||'<div style="color:var(--dim);font-size:11px;padding:6px 0;text-align:center">Sin tareas pendientes 🎉</div>';
+  // Done section
+  var allDone=[];
+  ['high','mid','low','shop','pay'].forEach(function(k){
+    h4LoadDone(k).forEach(function(e){allDone.push({k:k,e:e});});
+  });
+  allDone.sort(function(a,b){return b.e.date>a.e.date?1:-1;});
+  var dEl=document.getElementById('h4-done-unified');
+  if(dEl){
+    dEl.innerHTML=allDone.length?allDone.slice(0,30).map(function(x){
+      var e=x.e;
+      return '<div class="hist-item" style="display:flex;align-items:center;gap:6px">'
+        +'<span class="hist-date">'+e.date+'</span>'
+        +'<span style="font-size:10px">'+PRI_ICON[x.k]+'</span>'
+        +(e.emp?'<span class="emp-tag" style="background:'+EMP_COLORS[e.emp||'']+'20;color:'+EMP_COLORS[e.emp||'']+'">'+EMP_NAMES[e.emp||'']+'</span> ':'')
+        +'<span class="hist-txt" style="text-decoration:line-through;color:var(--dim);flex:1">'+esc(e.text)+'</span>'
+        +'</div>';
+    }).join(''):'<div style="color:var(--dim);font-size:11px;padding:4px 0">—</div>';
+  }
+}
+
+function h4ChkUnified(el){
+  var k=el.getAttribute('data-k'),id=parseInt(el.getAttribute('data-id'));
+  var arr=h4LoadList(k);
+  var x=arr.find(function(t){return t.id===id;});
+  if(!x)return;
+  var done=h4LoadDone(k);
+  done.unshift({date:todayKey(),text:x.text,emp:x.emp||''});
+  h4SaveDone(k,done);
+  h4SaveList(k,arr.filter(function(t){return t.id!==id;}));
+  h4RenderUnified();
+  toast('✅ Realizada');
+}
+
+function h4RmUnified(el){
+  var k=el.getAttribute('data-k'),id=parseInt(el.getAttribute('data-id'));
+  h4SaveList(k,h4LoadList(k).filter(function(t){return t.id!==id;}));
+  h4RenderUnified();
+}
+
+function h4ToggleFixed(){
+  var list=document.getElementById('h4-fixed-list');
+  var arrow=document.getElementById('h4-fixed-arrow');
+  if(!list)return;
+  var open=list.style.display==='none'||list.style.display==='';
+  list.style.display=open?'block':'none';
+  if(arrow)arrow.style.transform=open?'rotate(90deg)':'';
+  ls('h4_fixed_open',open?'1':'0');
+}
+
 // ═══ TAREAS FIJAS (RECURRENTES) ═══
 var DIAS_SEMANA=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 var DIAS_SHORT=['dom','lun','mar','mié','jue','vie','sáb'];
@@ -2286,9 +2386,9 @@ var MESES_C=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","
 var DOW_C=["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
 var CAL_REC_DEF=[{id:"cr1",dow:3,time:"11:00",text:"Bateria Rockstar"},{id:"cr2",dow:4,time:"19:00",text:"Nos Portamos Mal"},{id:"cr3",dow:2,time:"20:00",text:"Logia Manuel Guzman"},{id:"cr4",dow:1,time:"",text:"Nora+Fotos Jorge"},{id:"cr5",dow:5,time:"",text:"Carlos Gonzalez Inmo"}];
 var MONTHLY_DEF=[{id:"m1",day:20,time:"",text:"Pagar IVA"},{id:"m2",day:28,time:"",text:"Cotizaciones"}];
-function calLoadRec(){try{var s=ls("cal_rec");return(s&&s.length)?s:JSON.parse(JSON.stringify(CAL_REC_DEF));}catch(e){return JSON.parse(JSON.stringify(CAL_REC_DEF));}}
+function calLoadRec(){try{var s=ls("cal_rec");return(s!==null&&s!==undefined)?s:JSON.parse(JSON.stringify(CAL_REC_DEF));}catch(e){return JSON.parse(JSON.stringify(CAL_REC_DEF));}}
 function calSaveRec(a){ls("cal_rec",a);}function calLoadEvs(){return ls("cal_evs")||[];}function calSaveEvs(a){ls("cal_evs",a);}
-function calLoadMonthly(){try{var s=ls("cal_monthly");return(s&&s.length)?s:JSON.parse(JSON.stringify(MONTHLY_DEF));}catch(e){return JSON.parse(JSON.stringify(MONTHLY_DEF));}}
+function calLoadMonthly(){try{var s=ls("cal_monthly");return(s!==null&&s!==undefined)?s:JSON.parse(JSON.stringify(MONTHLY_DEF));}catch(e){return JSON.parse(JSON.stringify(MONTHLY_DEF));}}
 function calSaveMonthly(a){ls("cal_monthly",a);}
 function calNav(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();}
 function renderCal(){var te=document.getElementById("cal-title");if(te)te.textContent=MESES_C[calMonth]+" "+calYear;var first=new Date(calYear,calMonth,1),last=new Date(calYear,calMonth+1,0);var off=(first.getDay()+6)%7,tot=last.getDate(),today=todayKey();var rec=calLoadRec(),evs=calLoadEvs(),monthly=calLoadMonthly();var grid=document.getElementById("cal-grid");if(!grid)return;while(grid.children.length>7)grid.removeChild(grid.lastChild);var pT=new Date(calYear,calMonth,0).getDate();for(var i=0;i<off;i++){var b=document.createElement("div");b.className="cal-cell cal-other";b.innerHTML="<div class='cal-num'>"+(pT-off+i+1)+"</div>";grid.appendChild(b);}for(var d=1;d<=tot;d++){var ds=calYear+"-"+String(calMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var dow=new Date(calYear,calMonth,d).getDay();var c=document.createElement("div");c.className="cal-cell"+(ds===today?" cal-today":"")+(ds===calSelectedDate?" cal-selected":"");c.onclick=(function(x){return function(){calSelectDay(x);};})(ds);var h="<div class='cal-num'>"+d+"</div>";var dayEvs=[];rec.forEach(function(r){if(r.dow===dow)dayEvs.push({t:r.time||'',html:"<div class='cal-ev ev-rec'>"+(r.time?r.time+" ":"")+r.text.slice(0,13)+"</div>"});});evs.filter(function(e){return e.date===ds;}).forEach(function(e){dayEvs.push({t:e.time||'',html:"<div class='cal-ev ev-one'>"+(e.time?e.time+" ":"")+e.text.slice(0,13)+"</div>"});});monthly.forEach(function(m){if(m.day===d)dayEvs.push({t:m.time||'',html:"<div class='cal-ev' style='background:rgba(251,191,36,.18);color:#fbbf24'>"+(m.time?m.time+" ":"")+m.text.slice(0,13)+"</div>"});});dayEvs.sort(function(a,b){return (a.t||'').localeCompare(b.t||'');});dayEvs.forEach(function(e){h+=e.html;});c.innerHTML=h;grid.appendChild(c);}var rem=(7-(off+tot)%7)%7;for(var r2=1;r2<=rem;r2++){var b2=document.createElement("div");b2.className="cal-cell cal-other";b2.innerHTML="<div class='cal-num'>"+r2+"</div>";grid.appendChild(b2);}renderRecListCal();renderMonthlyList();if(calSelectedDate)calShowDetail(calSelectedDate);}
